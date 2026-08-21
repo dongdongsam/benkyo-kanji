@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="BenkyoKanji.Tests/BenkyoKanji.Tests.csproj" />
+  <Project Path="BenkyoKanji/BenkyoKanji.csproj" />
+</Solution>
