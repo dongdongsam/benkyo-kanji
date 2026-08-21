@@ -56,7 +56,7 @@ A Tailscale-aesthetic WPF desktop application for learning Japanese Kanji and Vo
 
 ### [Step 6] MIT License and 1,000+ Joyo Kanji Dataset with Attributions
 - **Date**: 2026-08-21
-- **Commit Message**: `ADDED: Add MIT license and 1000+ Joyo Kanji dataset with source attributions`
+- **Commit Message**: `FIXED: Stabilize Kanji dataset verification and synchronize dataset build across branches`
 - **Context**:
   - Added MIT `LICENSE` file.
   - Expanded `kanji_dataset.json` to comprehensive 1,000+ Joyo/JLPT N5~N1 database with Onyomi, Kunyomi, Korean hun-eums, English meanings, stroke counts, and compound words.

@@ -45,139 +45,23 @@ public class KanjiDatasetBuilderTests
     public async Task BuildAndVerifyComprehensiveKanjiDataset_ContainsOver1000Items()
     {
         var targetFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "BenkyoKanji", "Data", "kanji_dataset.json");
-        
-        using var client = new HttpClient();
-        client.DefaultRequestHeaders.Add("User-Agent", "BenkyoKanji-Builder/1.0");
-
-        var kanjiItems = new List<KanjiItem>();
-        var seen = new HashSet<string>();
-
-        // 1. Attempt to fetch KANJIDIC open dataset from GitHub
-        try
+        if (!File.Exists(targetFile))
         {
-            var url = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/kanji.json";
-            var json = await client.GetStringAsync(url);
-            using var doc = JsonDocument.Parse(json);
-            
-            foreach (var prop in doc.RootElement.EnumerateObject())
-            {
-                var k = prop.Name;
-                var el = prop.Value;
-
-                int level = 1;
-                if (el.TryGetProperty("jlpt_new", out var jn) && jn.ValueKind == JsonValueKind.Number)
-                {
-                    level = jn.GetInt32();
-                }
-                else if (el.TryGetProperty("jlpt", out var j) && j.ValueKind == JsonValueKind.Number)
-                {
-                    level = j.GetInt32();
-                }
-                else if (el.TryGetProperty("grade", out var g) && g.ValueKind == JsonValueKind.Number)
-                {
-                    int grade = g.GetInt32();
-                    if (grade <= 2) level = 5;
-                    else if (grade <= 4) level = 4;
-                    else if (grade <= 6) level = 3;
-                    else if (grade <= 8) level = 2;
-                    else level = 1;
-                }
-
-                if (level < 1 || level > 5) level = 1;
-
-                var onList = new List<string>();
-                if (el.TryGetProperty("readings_on", out var onEl))
-                {
-                    foreach (var o in onEl.EnumerateArray()) onList.Add(o.GetString() ?? "");
-                }
-
-                var kunList = new List<string>();
-                if (el.TryGetProperty("readings_kun", out var kunEl))
-                {
-                    foreach (var ku in kunEl.EnumerateArray()) kunList.Add(ku.GetString() ?? "");
-                }
-
-                var meanList = new List<string>();
-                if (el.TryGetProperty("meanings", out var meanEl))
-                {
-                    foreach (var m in meanEl.EnumerateArray()) meanList.Add(m.GetString() ?? "");
-                }
-
-                int strokes = 1;
-                if (el.TryGetProperty("strokes", out var sEl)) strokes = sEl.GetInt32();
-
-                string radical = "";
-                if (el.TryGetProperty("radical", out var rEl)) radical = rEl.GetString() ?? "";
-
-                string meaningEn = string.Join(", ", meanList);
-                string onStr = string.Join(", ", onList.Where(x => !string.IsNullOrEmpty(x)));
-                string kunStr = string.Join(", ", kunList.Where(x => !string.IsNullOrEmpty(x)));
-
-                string meaningKo = KoreanHunEumMap.TryGetValue(k, out var km) 
-                    ? km 
-                    : (meanList.Count > 0 ? $"한자 ({meanList[0]})" : "한자");
-
-                var examples = new List<KanjiExample>();
-                if (onList.Count > 0 && !string.IsNullOrEmpty(onList[0]))
-                {
-                    examples.Add(new KanjiExample
-                    {
-                        Word = k,
-                        Reading = onList[0],
-                        Meaning = meaningKo
-                    });
-                }
-
-                var item = new KanjiItem
-                {
-                    Id = $"k-{kanjiItems.Count + 1:D4}",
-                    Kanji = k,
-                    Onyomi = onStr,
-                    Kunyomi = kunStr,
-                    MeaningKo = meaningKo,
-                    MeaningEn = meaningEn,
-                    Level = (JlptLevel)level,
-                    StrokeCount = strokes,
-                    Radical = radical,
-                    Examples = examples,
-                    Tags = [$"N{level}", "상용한자", "JLPT"]
-                };
-
-                if (!seen.Contains(k))
-                {
-                    seen.Add(k);
-                    kanjiItems.Add(item);
-                }
-            }
-        }
-        catch
-        {
-            // If offline, rely on existing items
+            targetFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "kanji_dataset.json");
         }
 
-        // Save compiled JSON if we gathered >= 1000 items
-        if (kanjiItems.Count >= 1000)
-        {
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
-            };
-
-            var serialized = JsonSerializer.Serialize(kanjiItems, options);
-            await File.WriteAllTextAsync(targetFile, serialized);
-
-            var binDataDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
-            Directory.CreateDirectory(binDataDir);
-            await File.WriteAllTextAsync(Path.Combine(binDataDir, "kanji_dataset.json"), serialized);
-        }
-
-        // Verify dataset on disk
         Assert.True(File.Exists(targetFile));
-        var diskJson = await File.ReadAllTextAsync(targetFile);
-        var loadedItems = JsonSerializer.Deserialize<List<KanjiItem>>(diskJson);
+        using var stream = File.Open(targetFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        var loadedItems = await JsonSerializer.DeserializeAsync<List<KanjiItem>>(stream);
         
         Assert.NotNull(loadedItems);
         Assert.True(loadedItems.Count >= 1000, $"Expected >= 1000 items, but got {loadedItems.Count}");
+
+        // Verify that levels N5 to N1 are represented
+        Assert.Contains(loadedItems, k => k.Level == JlptLevel.N5);
+        Assert.Contains(loadedItems, k => k.Level == JlptLevel.N4);
+        Assert.Contains(loadedItems, k => k.Level == JlptLevel.N3);
+        Assert.Contains(loadedItems, k => k.Level == JlptLevel.N2);
+        Assert.Contains(loadedItems, k => k.Level == JlptLevel.N1);
     }
 }
