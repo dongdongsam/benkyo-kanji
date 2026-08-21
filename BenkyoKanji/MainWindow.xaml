@@ -8,10 +8,10 @@
         xmlns:conv="clr-namespace:BenkyoKanji.Converters"
         mc:Ignorable="d"
         Title="Benkyo Kanji (勉強漢字) - 에빙하우스 망각 곡선 한자 학습 &amp; PDF 시험지 채점기" 
-        Height="800" Width="1200" MinHeight="650" MinWidth="960"
+        Height="820" Width="1240" MinHeight="650" MinWidth="980"
         WindowStartupLocation="CenterScreen"
-        Background="{StaticResource BgCanvasBrush}"
-        Foreground="{StaticResource TextPrimaryBrush}">
+        Background="{DynamicResource BgCanvasBrush}"
+        Foreground="{DynamicResource TextPrimaryBrush}">
 
     <Window.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolVisConv" />
@@ -45,7 +45,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Left Navigation Sidebar (Tailscale Aesthetic) -->
-        <Border Grid.Column="0" Background="{StaticResource BgSidebarBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+        <Border Grid.Column="0" Background="{DynamicResource BgSidebarBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
             <Grid Margin="16,20,16,16">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -56,19 +56,19 @@
                 <!-- App Brand / Header -->
                 <StackPanel Grid.Row="0" Margin="0,0,0,24">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Border Background="#4f46e5" Width="32" Height="32" CornerRadius="8" Margin="0,0,10,0">
+                        <Border Background="{DynamicResource AccentBrush}" Width="32" Height="32" CornerRadius="8" Margin="0,0,10,0">
                             <TextBlock Text="漢" FontFamily="{StaticResource KanjiFont}" FontSize="18" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="Benkyo Kanji" FontSize="15" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
-                            <TextBlock Text="勉強漢字 v1.0" FontSize="10.5" Foreground="{StaticResource TextMutedBrush}"/>
+                            <TextBlock Text="Benkyo Kanji" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            <TextBlock Text="勉強漢字 v1.0" FontSize="10.5" Foreground="{DynamicResource TextMutedBrush}"/>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
 
                 <!-- Navigation Links -->
                 <StackPanel Grid.Row="1">
-                    <TextBlock Text="학습 &amp; 복습" FontSize="10.5" Foreground="{StaticResource TextMutedBrush}" FontWeight="SemiBold" Margin="8,0,0,6"/>
+                    <TextBlock Text="학습 &amp; 복습" FontSize="10.5" Foreground="{DynamicResource TextMutedBrush}" FontWeight="SemiBold" Margin="8,0,0,6"/>
 
                     <!-- Dashboard -->
                     <RadioButton Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="Dashboard"
@@ -88,7 +88,7 @@
                         </StackPanel>
                     </RadioButton>
 
-                    <TextBlock Text="종이 출력 &amp; 채점" FontSize="10.5" Foreground="{StaticResource TextMutedBrush}" FontWeight="SemiBold" Margin="8,16,0,6"/>
+                    <TextBlock Text="종이 출력 &amp; 채점" FontSize="10.5" Foreground="{DynamicResource TextMutedBrush}" FontWeight="SemiBold" Margin="8,16,0,6"/>
 
                     <!-- PDF Worksheet -->
                     <RadioButton Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="Worksheet"
@@ -108,7 +108,7 @@
                         </StackPanel>
                     </RadioButton>
 
-                    <TextBlock Text="데이터" FontSize="10.5" Foreground="{StaticResource TextMutedBrush}" FontWeight="SemiBold" Margin="8,16,0,6"/>
+                    <TextBlock Text="데이터" FontSize="10.5" Foreground="{DynamicResource TextMutedBrush}" FontWeight="SemiBold" Margin="8,16,0,6"/>
 
                     <!-- Kanji Dictionary -->
                     <RadioButton Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="Dictionary"
@@ -129,13 +129,26 @@
                     </RadioButton>
                 </StackPanel>
 
-                <!-- Bottom Status Pill -->
-                <Border Grid.Row="2" Style="{StaticResource TailscaleSecondaryCard}" Padding="10,8">
-                    <StackPanel Orientation="Horizontal">
-                        <Ellipse Style="{StaticResource StatusDot}"/>
-                        <TextBlock Text="로컬 JSON 저장 활성" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
-                    </StackPanel>
-                </Border>
+                <!-- Bottom Bar: Theme Toggle & Status -->
+                <StackPanel Grid.Row="2">
+                    <!-- Quick Theme Toggle Button -->
+                    <Button Style="{StaticResource SecondaryButton}" Command="{Binding ToggleThemeCommand}" Margin="0,0,0,8" Padding="10,7" ToolTip="다크 / 라이트 모드 전환">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <TextBlock Text="테마: " FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                <TextBlock Text="{Binding CurrentTheme}" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                                <TextBlock Text=" (클릭하여 전환)" FontSize="10" Foreground="{DynamicResource TextMutedBrush}" Margin="4,0,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Border Style="{StaticResource TailscaleSecondaryCard}" Padding="10,8">
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Style="{StaticResource StatusDot}"/>
+                            <TextBlock Text="로컬 JSON 저장 활성" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
             </Grid>
         </Border>
 
@@ -147,12 +160,12 @@
             </Grid.RowDefinitions>
 
             <!-- Global Toast / Notification Bar -->
-            <Border Grid.Row="0" Background="#1e1b4b" BorderBrush="#4338ca" BorderThickness="0,0,0,1" Padding="16,8"
+            <Border Grid.Row="0" Background="{DynamicResource AccentBadgeBgBrush}" BorderBrush="{DynamicResource AccentBrush}" BorderThickness="0,0,0,1" Padding="16,8"
                     Visibility="{Binding CurrentViewModel.StatusMessage, Converter={StaticResource NullOrEmptyConv}}">
                 <Grid>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Ellipse Width="6" Height="6" Fill="#818cf8" Margin="0,0,8,0"/>
-                        <TextBlock Text="{Binding CurrentViewModel.StatusMessage}" FontSize="12" Foreground="#c7d2fe"/>
+                        <Ellipse Width="6" Height="6" Fill="{DynamicResource AccentBrush}" Margin="0,0,8,0"/>
+                        <TextBlock Text="{Binding CurrentViewModel.StatusMessage}" FontSize="12" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Medium"/>
                     </StackPanel>
                 </Grid>
             </Border>

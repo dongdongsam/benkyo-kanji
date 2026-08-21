@@ -27,8 +27,8 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="종이 출력용 PDF 시험지·학습표 생성기" FontSize="20" FontWeight="Bold"/>
-                <TextBlock Text="단어(한자)·음독/훈독·한국어 뜻 빈칸 퀴즈를 A4 규격으로 생성하여 인쇄 및 채점할 수 있습니다." FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+                <TextBlock Text="종이 출력용 PDF 시험지·학습표 생성기" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBlock Text="단어(한자)·음독/훈독·한국어 뜻 빈칸 퀴즈를 A4 규격으로 생성하여 인쇄 및 채점할 수 있습니다." FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
@@ -55,14 +55,14 @@
                     <!-- Presets & Type Selection Card -->
                     <Border Style="{StaticResource TailscaleCard}" Margin="0,0,0,14">
                         <StackPanel>
-                            <TextBlock Text="1. 시험지 형식 선택" FontSize="13" FontWeight="Bold" Margin="0,0,0,10"/>
+                            <TextBlock Text="1. 시험지 형식 선택" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10"/>
 
                             <!-- Type 1: Kanji Quiz -->
                             <RadioButton Style="{StaticResource NavButton}" IsChecked="{Binding SelectedType, Converter={StaticResource BoolVisConv}, ConverterParameter={x:Static models:WorksheetType.KanjiQuiz}}"
                                          Command="{Binding QuickPresetKanjiQuizCommand}">
                                 <StackPanel>
                                     <TextBlock Text="한자 쓰기 테스트 (한자 빈칸)" FontSize="12.5" FontWeight="SemiBold"/>
-                                    <TextBlock Text="음훈독과 뜻을 보고 한자를 직접 쓰는 연습" FontSize="10.5" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="음훈독과 뜻을 보고 한자를 직접 쓰는 연습" FontSize="10.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                 </StackPanel>
                             </RadioButton>
 
@@ -71,7 +71,7 @@
                                          Command="{Binding QuickPresetReadingQuizCommand}">
                                 <StackPanel>
                                     <TextBlock Text="음독·훈독 읽기 테스트 (읽기 빈칸)" FontSize="12.5" FontWeight="SemiBold"/>
-                                    <TextBlock Text="한자와 뜻을 보고 히라가나/가타카나 작성" FontSize="10.5" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="한자와 뜻을 보고 히라가나/가타카나 작성" FontSize="10.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                 </StackPanel>
                             </RadioButton>
 
@@ -80,7 +80,7 @@
                                          Command="{Binding QuickPresetMeaningQuizCommand}">
                                 <StackPanel>
                                     <TextBlock Text="한국어 뜻 테스트 (뜻 빈칸)" FontSize="12.5" FontWeight="SemiBold"/>
-                                    <TextBlock Text="한자와 음훈독을 보고 한국어 훈음을 작성" FontSize="10.5" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="한자와 음훈독을 보고 한국어 훈음을 작성" FontSize="10.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                 </StackPanel>
                             </RadioButton>
 
@@ -89,7 +89,7 @@
                                          Command="{Binding QuickPresetStudyTableCommand}">
                                 <StackPanel>
                                     <TextBlock Text="전체 학습 정리표 (전체 표시)" FontSize="12.5" FontWeight="SemiBold"/>
-                                    <TextBlock Text="한자, 음훈독, 뜻, 예문이 모두 적힌 암기용 표" FontSize="10.5" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="한자, 음훈독, 뜻, 예문이 모두 적힌 암기용 표" FontSize="10.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                 </StackPanel>
                             </RadioButton>
                         </StackPanel>
@@ -98,10 +98,10 @@
                     <!-- Filter & Scope Card -->
                     <Border Style="{StaticResource TailscaleCard}" Margin="0,0,0,14">
                         <StackPanel>
-                            <TextBlock Text="2. 출제 범위 및 문항 수" FontSize="13" FontWeight="Bold" Margin="0,0,0,10"/>
+                            <TextBlock Text="2. 출제 범위 및 문항 수" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10"/>
 
                             <!-- JLPT Level -->
-                            <TextBlock Text="JLPT 난이도 레벨" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,4"/>
+                            <TextBlock Text="JLPT 난이도 레벨" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4"/>
                             <ComboBox SelectedValue="{Binding SelectedLevel}" SelectedValuePath="Tag" Margin="0,0,0,12">
                                 <ComboBoxItem Content="전체 레벨 (N5 ~ N1)" Tag="{x:Static models:JlptLevel.All}" IsSelected="True"/>
                                 <ComboBoxItem Content="JLPT N5 (기초)" Tag="{x:Static models:JlptLevel.N5}"/>
@@ -113,8 +113,8 @@
 
                             <!-- Question Count -->
                             <Grid Margin="0,0,0,4">
-                                <TextBlock Text="문항 수" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                <TextBlock Text="{Binding QuestionCount, StringFormat='{}{0}문항'}" FontSize="11" FontWeight="Bold" HorizontalAlignment="Right"/>
+                                <TextBlock Text="문항 수" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                <TextBlock Text="{Binding QuestionCount, StringFormat='{}{0}문항'}" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Right"/>
                             </Grid>
                             <Slider Minimum="5" Maximum="50" TickFrequency="5" IsSnapToTickEnabled="True"
                                     Value="{Binding QuestionCount}" Margin="0,0,0,12"/>
@@ -127,9 +127,9 @@
                     <!-- PDF Customization Card -->
                     <Border Style="{StaticResource TailscaleCard}" Margin="0,0,0,14">
                         <StackPanel>
-                            <TextBlock Text="3. 시험지 세부 설정" FontSize="13" FontWeight="Bold" Margin="0,0,0,10"/>
+                            <TextBlock Text="3. 시험지 세부 설정" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10"/>
 
-                            <TextBlock Text="시험지 제목" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,4"/>
+                            <TextBlock Text="시험지 제목" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4"/>
                             <TextBox Text="{Binding SheetTitle, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,12"/>
 
                             <CheckBox Content="단어별 대표 예문 및 파생 어휘 포함" IsChecked="{Binding IncludeExamples}" Margin="0,0,0,8"/>
@@ -140,7 +140,7 @@
                     <!-- Refresh Preview Button -->
                     <Button Style="{StaticResource SecondaryButton}" Command="{Binding RefreshPreviewCommand}" Margin="0,0,0,8">
                         <StackPanel Orientation="Horizontal">
-                            <Path Data="{StaticResource IconRefresh}" Fill="{StaticResource TextSecondaryBrush}" Width="12" Height="12" Stretch="Uniform" Margin="0,0,6,0"/>
+                            <Path Data="{StaticResource IconRefresh}" Fill="{DynamicResource TextSecondaryBrush}" Width="12" Height="12" Stretch="Uniform" Margin="0,0,6,0"/>
                             <TextBlock Text="랜덤 문항 다시 추출 (미리보기 갱신)" FontSize="12"/>
                         </StackPanel>
                     </Button>
@@ -156,15 +156,15 @@
                     </Grid.RowDefinitions>
 
                     <!-- Preview Top Bar -->
-                    <Border Grid.Row="0" Background="{StaticResource BgCardSecondaryBrush}" CornerRadius="10,10,0,0" Padding="16,10" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
+                    <Border Grid.Row="0" Background="{DynamicResource BgCardSecondaryBrush}" CornerRadius="10,10,0,0" Padding="16,10" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1">
                         <Grid>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Ellipse Style="{StaticResource StatusDot}"/>
-                                <TextBlock Text="{Binding CurrentConfig.SheetTypeName, FallbackValue='시험지 미리보기'}" FontSize="13" FontWeight="SemiBold"/>
-                                <TextBlock Text="{Binding CurrentConfig.WorksheetId, StringFormat=' | ID: {0}'}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding CurrentConfig.SheetTypeName, FallbackValue='시험지 미리보기'}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="{Binding CurrentConfig.WorksheetId, StringFormat=' | ID: {0}'}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                             </StackPanel>
 
-                            <TextBlock Text="{Binding PreviewItems.Count, StringFormat='총 {0}문항'}" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding PreviewItems.Count, StringFormat='총 {0}문항'}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                         </Grid>
                     </Border>
 
@@ -172,20 +172,20 @@
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                         <DataGrid ItemsSource="{Binding PreviewItems}" AutoGenerateColumns="False" 
                                   CanUserAddRows="False" IsReadOnly="True"
-                                  Background="Transparent" RowBackground="{StaticResource BgCardBrush}" AlternatingRowBackground="{StaticResource BgCardSecondaryBrush}"
-                                  BorderThickness="0" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{StaticResource BorderBrush}">
+                                  Background="Transparent" RowBackground="{DynamicResource BgCardBrush}" AlternatingRowBackground="{DynamicResource BgCardSecondaryBrush}"
+                                  BorderThickness="0" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{DynamicResource BorderBrush}">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridColumnHeader">
-                                    <Setter Property="Background" Value="{StaticResource BgCardSecondaryBrush}"/>
-                                    <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+                                    <Setter Property="Background" Value="{DynamicResource BgCardSecondaryBrush}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
                                     <Setter Property="FontWeight" Value="SemiBold"/>
                                     <Setter Property="FontSize" Value="11.5"/>
                                     <Setter Property="Padding" Value="10,8"/>
                                     <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                                    <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+                                    <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
                                 </Style>
                                 <Style TargetType="DataGridCell">
-                                    <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
                                     <Setter Property="Padding" Value="10,8"/>
                                     <Setter Property="BorderThickness" Value="0"/>
                                 </Style>
@@ -202,12 +202,12 @@
                                             <Grid>
                                                 <!-- Visible Kanji -->
                                                 <TextBlock Text="{Binding KanjiItem.Kanji}" FontFamily="{StaticResource KanjiFont}"
-                                                           FontSize="22" FontWeight="Bold" VerticalAlignment="Center"
+                                                           FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"
                                                            Visibility="{Binding HideKanji, Converter={StaticResource InvertBoolVisConv}}"/>
                                                 <!-- Blank Writing Box -->
-                                                <Border BorderBrush="#4f46e5" BorderThickness="1.5" CornerRadius="4" Width="42" Height="36" Background="#181722"
+                                                <Border BorderBrush="{DynamicResource AccentBrush}" BorderThickness="1.5" CornerRadius="4" Width="42" Height="36" Background="{DynamicResource KanjiBoxBgBrush}"
                                                         Visibility="{Binding HideKanji, Converter={StaticResource BoolVisConv}}">
-                                                    <TextBlock Text="[빈칸]" FontSize="9" Foreground="#818cf8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="[빈칸]" FontSize="9" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                 </Border>
                                             </Grid>
                                         </DataTemplate>
@@ -220,12 +220,12 @@
                                         <DataTemplate>
                                             <Grid>
                                                 <StackPanel Visibility="{Binding HideReading, Converter={StaticResource InvertBoolVisConv}}">
-                                                    <TextBlock Text="{Binding KanjiItem.Onyomi, StringFormat='음: {0}'}" FontSize="11.5" Foreground="#818cf8"/>
-                                                    <TextBlock Text="{Binding KanjiItem.Kunyomi, StringFormat='훈: {0}'}" FontSize="11.5" Foreground="#34d399"/>
+                                                    <TextBlock Text="{Binding KanjiItem.Onyomi, StringFormat='음: {0}'}" FontSize="11.5" Foreground="{DynamicResource AccentBrush}"/>
+                                                    <TextBlock Text="{Binding KanjiItem.Kunyomi, StringFormat='훈: {0}'}" FontSize="11.5" Foreground="{DynamicResource SuccessBrush}"/>
                                                 </StackPanel>
-                                                <Border BorderBrush="#4f46e5" BorderThickness="1" CornerRadius="4" Height="32" Background="#181722" Padding="6,4"
+                                                <Border BorderBrush="{DynamicResource AccentBrush}" BorderThickness="1" CornerRadius="4" Height="32" Background="{DynamicResource KanjiBoxBgBrush}" Padding="6,4"
                                                         Visibility="{Binding HideReading, Converter={StaticResource BoolVisConv}}">
-                                                    <TextBlock Text="[음훈독 쓰기 빈칸]" FontSize="9" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="[음훈독 쓰기 빈칸]" FontSize="9" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                                                 </Border>
                                             </Grid>
                                         </DataTemplate>
@@ -238,12 +238,12 @@
                                         <DataTemplate>
                                             <Grid>
                                                 <StackPanel Visibility="{Binding HideMeaning, Converter={StaticResource InvertBoolVisConv}}">
-                                                    <TextBlock Text="{Binding KanjiItem.MeaningKo}" FontSize="12.5" FontWeight="SemiBold"/>
-                                                    <TextBlock Text="{Binding KanjiItem.MeaningEn}" FontSize="10.5" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                                    <TextBlock Text="{Binding KanjiItem.MeaningKo}" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                    <TextBlock Text="{Binding KanjiItem.MeaningEn}" FontSize="10.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                                 </StackPanel>
-                                                <Border BorderBrush="#4f46e5" BorderThickness="1" CornerRadius="4" Height="32" Background="#181722" Padding="6,4"
+                                                <Border BorderBrush="{DynamicResource AccentBrush}" BorderThickness="1" CornerRadius="4" Height="32" Background="{DynamicResource KanjiBoxBgBrush}" Padding="6,4"
                                                         Visibility="{Binding HideMeaning, Converter={StaticResource BoolVisConv}}">
-                                                    <TextBlock Text="[한국어 뜻 쓰기 빈칸]" FontSize="9" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="[한국어 뜻 쓰기 빈칸]" FontSize="9" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
                                                 </Border>
                                             </Grid>
                                         </DataTemplate>

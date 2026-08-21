@@ -29,27 +29,27 @@
 
                 <StackPanel VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                        <Border Style="{StaticResource TailscalePill}" Background="#1e1b4b" BorderBrush="#4338ca" Margin="0,0,10,0">
+                        <Border Style="{StaticResource TailscalePill}" Background="{DynamicResource AccentBadgeBgBrush}" BorderBrush="{DynamicResource AccentBrush}" Margin="0,0,10,0">
                             <StackPanel Orientation="Horizontal">
-                                <Ellipse Style="{StaticResource StatusDot}" Fill="#818cf8"/>
-                                <TextBlock Text="에빙하우스 망각 곡선 가동 중" FontSize="11" Foreground="#c7d2fe" FontWeight="SemiBold"/>
+                                <Ellipse Style="{StaticResource StatusDot}" Fill="{DynamicResource AccentBrush}"/>
+                                <TextBlock Text="에빙하우스 망각 곡선 가동 중" FontSize="11" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold"/>
                             </StackPanel>
                         </Border>
-                        <Border Style="{StaticResource TailscalePill}" Background="#064e3b" BorderBrush="#047857">
+                        <Border Style="{StaticResource TailscalePill}" Background="{DynamicResource SuccessBadgeBgBrush}" BorderBrush="{DynamicResource SuccessBrush}">
                             <StackPanel Orientation="Horizontal">
-                                <Path Data="{StaticResource IconFlame}" Fill="#34d399" Width="10" Height="10" Stretch="Uniform" Margin="0,0,4,0"/>
-                                <TextBlock Text="{Binding StreakDays, StringFormat='연속 {0}일 학습 중'}" FontSize="11" Foreground="#a7f3d0" FontWeight="Bold"/>
+                                <Path Data="{StaticResource IconFlame}" Fill="{DynamicResource SuccessBrush}" Width="10" Height="10" Stretch="Uniform" Margin="0,0,4,0"/>
+                                <TextBlock Text="{Binding StreakDays, StringFormat='연속 {0}일 학습 중'}" FontSize="11" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Bold"/>
                             </StackPanel>
                         </Border>
                     </StackPanel>
-                    <TextBlock Text="오늘의 일본어 한자 학습 대시보드" FontSize="22" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
-                    <TextBlock Text="망각 곡선 주기에 맞춰 기억이 흐려지기 전 최적의 타이밍에 복습하세요." FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,3,0,0"/>
+                    <TextBlock Text="오늘의 일본어 한자 학습 대시보드" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock Text="망각 곡선 주기에 맞춰 기억이 흐려지기 전 최적의 타이밍에 복습하세요." FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,3,0,0"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                     <Button Style="{StaticResource SecondaryButton}" Command="{Binding RefreshCommand}" Margin="0,0,8,0" ToolTip="새로고침">
                         <StackPanel Orientation="Horizontal">
-                            <Path Data="{StaticResource IconRefresh}" Fill="{StaticResource TextSecondaryBrush}" Width="12" Height="12" Stretch="Uniform" Margin="0,0,6,0"/>
+                            <Path Data="{StaticResource IconRefresh}" Fill="{DynamicResource TextSecondaryBrush}" Width="12" Height="12" Stretch="Uniform" Margin="0,0,6,0"/>
                             <TextBlock Text="새로고침" FontSize="12"/>
                         </StackPanel>
                     </Button>
@@ -78,13 +78,13 @@
                 <Border Grid.Column="0" Style="{StaticResource TailscaleCard}">
                     <StackPanel>
                         <Grid Margin="0,0,0,8">
-                            <TextBlock Text="오늘 복습 대기" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" FontWeight="SemiBold"/>
-                            <Border HorizontalAlignment="Right" Background="#450a0a" CornerRadius="6" Padding="6,2">
-                                <TextBlock Text="DUE" FontSize="9" Foreground="#f87171" FontWeight="Bold"/>
+                            <TextBlock Text="오늘 복습 대기" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold"/>
+                            <Border HorizontalAlignment="Right" Background="{DynamicResource DangerBadgeBgBrush}" CornerRadius="6" Padding="6,2">
+                                <TextBlock Text="DUE" FontSize="9" Foreground="{DynamicResource DangerBrush}" FontWeight="Bold"/>
                             </Border>
                         </Grid>
-                        <TextBlock Text="{Binding DueReviewCount}" FontSize="28" FontWeight="Bold" Foreground="#f87171"/>
-                        <TextBlock Text="개 한자 복습 필요" FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,4,0,0"/>
+                        <TextBlock Text="{Binding DueReviewCount}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource DangerBrush}"/>
+                        <TextBlock Text="개 한자 복습 필요" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" Margin="0,4,0,0"/>
                     </StackPanel>
                 </Border>
 
@@ -92,13 +92,13 @@
                 <Border Grid.Column="2" Style="{StaticResource TailscaleCard}">
                     <StackPanel>
                         <Grid Margin="0,0,0,8">
-                            <TextBlock Text="새로 배울 한자" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" FontWeight="SemiBold"/>
-                            <Border HorizontalAlignment="Right" Background="#1e1b4b" CornerRadius="6" Padding="6,2">
-                                <TextBlock Text="NEW" FontSize="9" Foreground="#a5b4fc" FontWeight="Bold"/>
+                            <TextBlock Text="새로 배울 한자" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold"/>
+                            <Border HorizontalAlignment="Right" Background="{DynamicResource AccentBadgeBgBrush}" CornerRadius="6" Padding="6,2">
+                                <TextBlock Text="NEW" FontSize="9" Foreground="{DynamicResource AccentBrush}" FontWeight="Bold"/>
                             </Border>
                         </Grid>
-                        <TextBlock Text="{Binding NewLearningCount}" FontSize="28" FontWeight="Bold" Foreground="#818cf8"/>
-                        <TextBlock Text="개 신규 단어 대기" FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,4,0,0"/>
+                        <TextBlock Text="{Binding NewLearningCount}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                        <TextBlock Text="개 신규 단어 대기" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" Margin="0,4,0,0"/>
                     </StackPanel>
                 </Border>
 
@@ -106,13 +106,13 @@
                 <Border Grid.Column="4" Style="{StaticResource TailscaleCard}">
                     <StackPanel>
                         <Grid Margin="0,0,0,8">
-                            <TextBlock Text="기억 정답률 (망각 억제)" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" FontWeight="SemiBold"/>
-                            <Border HorizontalAlignment="Right" Background="#064e3b" CornerRadius="6" Padding="6,2">
-                                <TextBlock Text="SRS" FontSize="9" Foreground="#34d399" FontWeight="Bold"/>
+                            <TextBlock Text="기억 정답률 (망각 억제)" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold"/>
+                            <Border HorizontalAlignment="Right" Background="{DynamicResource SuccessBadgeBgBrush}" CornerRadius="6" Padding="6,2">
+                                <TextBlock Text="SRS" FontSize="9" Foreground="{DynamicResource SuccessBrush}" FontWeight="Bold"/>
                             </Border>
                         </Grid>
-                        <TextBlock Text="{Binding RetentionRate, StringFormat='{}{0:F1}%'}" FontSize="28" FontWeight="Bold" Foreground="#34d399"/>
-                        <TextBlock Text="망각 곡선 유지율" FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,4,0,0"/>
+                        <TextBlock Text="{Binding RetentionRate, StringFormat='{}{0:F1}%'}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource SuccessBrush}"/>
+                        <TextBlock Text="망각 곡선 유지율" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" Margin="0,4,0,0"/>
                     </StackPanel>
                 </Border>
 
@@ -120,16 +120,16 @@
                 <Border Grid.Column="6" Style="{StaticResource TailscaleCard}">
                     <StackPanel>
                         <Grid Margin="0,0,0,8">
-                            <TextBlock Text="완전 암기 한자" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" FontWeight="SemiBold"/>
-                            <Border HorizontalAlignment="Right" Background="#26252e" CornerRadius="6" Padding="6,2">
-                                <TextBlock Text="TOTAL" FontSize="9" Foreground="{StaticResource TextSecondaryBrush}" FontWeight="Bold"/>
+                            <TextBlock Text="완전 암기 한자" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold"/>
+                            <Border HorizontalAlignment="Right" Background="{DynamicResource BgCardSecondaryBrush}" CornerRadius="6" Padding="6,2">
+                                <TextBlock Text="TOTAL" FontSize="9" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="Bold"/>
                             </Border>
                         </Grid>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding MasteredCount}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
-                            <TextBlock Text="{Binding TotalCards, StringFormat='/ {0}'}" FontSize="18" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Bottom" Margin="6,0,0,4"/>
+                            <TextBlock Text="{Binding MasteredCount}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            <TextBlock Text="{Binding TotalCards, StringFormat='/ {0}'}" FontSize="18" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Bottom" Margin="6,0,0,4"/>
                         </StackPanel>
-                        <TextBlock Text="장기 기억 도달 단어" FontSize="11" Foreground="{StaticResource TextMutedBrush}" Margin="0,4,0,0"/>
+                        <TextBlock Text="장기 기억 도달 단어" FontSize="11" Foreground="{DynamicResource TextMutedBrush}" Margin="0,4,0,0"/>
                     </StackPanel>
                 </Border>
             </Grid>
@@ -145,7 +145,7 @@
                 <!-- Mastery Status Bar Card -->
                 <Border Grid.Column="0" Style="{StaticResource TailscaleCard}">
                     <StackPanel>
-                        <TextBlock Text="한자 숙련도 단계별 현황" FontSize="14" FontWeight="Bold" Margin="0,0,0,12"/>
+                        <TextBlock Text="한자 숙련도 단계별 현황" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,12"/>
 
                         <!-- Visual Progress Segment -->
                         <Grid Margin="0,0,0,16">
@@ -166,33 +166,33 @@
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                                     <Ellipse Width="7" Height="7" Fill="#3b82f6" Margin="0,0,6,0"/>
-                                    <TextBlock Text="미학습" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="미학습" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                 </StackPanel>
-                                <TextBlock Text="{Binding NewCount, StringFormat='{}{0}개'}" FontSize="15" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding NewCount, StringFormat='{}{0}개'}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
                             </StackPanel>
 
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                                     <Ellipse Width="7" Height="7" Fill="#f59e0b" Margin="0,0,6,0"/>
-                                    <TextBlock Text="초기 학습" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="초기 학습" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                 </StackPanel>
-                                <TextBlock Text="{Binding LearningCount, StringFormat='{}{0}개'}" FontSize="15" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding LearningCount, StringFormat='{}{0}개'}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
                             </StackPanel>
 
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                                     <Ellipse Width="7" Height="7" Fill="#8b5cf6" Margin="0,0,6,0"/>
-                                    <TextBlock Text="주기 복습" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="주기 복습" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                 </StackPanel>
-                                <TextBlock Text="{Binding ReviewingCount, StringFormat='{}{0}개'}" FontSize="15" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding ReviewingCount, StringFormat='{}{0}개'}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
                             </StackPanel>
 
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                                     <Ellipse Width="7" Height="7" Fill="#10b981" Margin="0,0,6,0"/>
-                                    <TextBlock Text="완전 숙련" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="완전 숙련" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                 </StackPanel>
-                                <TextBlock Text="{Binding MasteredCount, StringFormat='{}{0}개'}" FontSize="15" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding MasteredCount, StringFormat='{}{0}개'}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
                             </StackPanel>
                         </UniformGrid>
                     </StackPanel>
@@ -201,7 +201,7 @@
                 <!-- 7-Day Forecast Card -->
                 <Border Grid.Column="2" Style="{StaticResource TailscaleCard}">
                     <StackPanel>
-                        <TextBlock Text="향후 7일간 복습 일정 예보" FontSize="14" FontWeight="Bold" Margin="0,0,0,12"/>
+                        <TextBlock Text="향후 7일간 복습 일정 예보" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,12"/>
                         <ItemsControl ItemsSource="{Binding ForecastDays}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -210,11 +210,11 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Margin="2" Padding="6,8" CornerRadius="6" Background="{StaticResource BgCardSecondaryBrush}">
+                                    <Border Margin="2" Padding="6,8" CornerRadius="6" Background="{DynamicResource BgCardSecondaryBrush}">
                                         <StackPanel HorizontalAlignment="Center">
-                                            <TextBlock Text="{Binding DayName}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center"/>
-                                            <TextBlock Text="{Binding DateStr}" FontSize="9" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,2,0,4"/>
-                                            <TextBlock Text="{Binding DueCount}" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="{Binding DayName}" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="{Binding DateStr}" FontSize="9" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,2,0,4"/>
+                                            <TextBlock Text="{Binding DueCount}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center"/>
                                         </StackPanel>
                                     </Border>
                                 </DataTemplate>
@@ -235,7 +235,7 @@
                 <!-- Left: Quick Workflow Shortcuts -->
                 <Border Grid.Column="0" Style="{StaticResource TailscaleCard}">
                     <StackPanel>
-                        <TextBlock Text="스마트 학습 바로가기" FontSize="14" FontWeight="Bold" Margin="0,0,0,12"/>
+                        <TextBlock Text="스마트 학습 바로가기" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,12"/>
 
                         <!-- PDF Worksheet Maker Shortcut -->
                         <Border Style="{StaticResource TailscaleSecondaryCard}" Margin="0,0,0,10">
@@ -245,12 +245,12 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Border Background="#1e1b4b" Width="36" Height="36" CornerRadius="8" Margin="0,0,12,0">
-                                    <Path Data="{StaticResource IconPdf}" Fill="#818cf8" Width="18" Height="18" Stretch="Uniform"/>
+                                <Border Background="{DynamicResource AccentBadgeBgBrush}" Width="36" Height="36" CornerRadius="8" Margin="0,0,12,0">
+                                    <Path Data="{StaticResource IconPdf}" Fill="{DynamicResource AccentBrush}" Width="18" Height="18" Stretch="Uniform"/>
                                 </Border>
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock Text="종이 출력용 PDF 시험지 만들기" FontSize="13" FontWeight="SemiBold"/>
-                                    <TextBlock Text="한자/음훈독/뜻 빈칸 퀴즈 표 생성 및 인쇄" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+                                    <TextBlock Text="종이 출력용 PDF 시험지 만들기" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                    <TextBlock Text="한자/음훈독/뜻 빈칸 퀴즈 표 생성 및 인쇄" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0"/>
                                 </StackPanel>
                                 <Button Grid.Column="2" Style="{StaticResource SecondaryButton}" Command="{Binding GenerateWorksheetCommand}" Content="생성하기" VerticalAlignment="Center"/>
                             </Grid>
@@ -264,12 +264,12 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Border Background="#064e3b" Width="36" Height="36" CornerRadius="8" Margin="0,0,12,0">
-                                    <Path Data="{StaticResource IconGrading}" Fill="#34d399" Width="18" Height="18" Stretch="Uniform"/>
+                                <Border Background="{DynamicResource SuccessBadgeBgBrush}" Width="36" Height="36" CornerRadius="8" Margin="0,0,12,0">
+                                    <Path Data="{StaticResource IconGrading}" Fill="{DynamicResource SuccessBrush}" Width="18" Height="18" Stretch="Uniform"/>
                                 </Border>
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock Text="작성한 시험지 사진 채점 (OCR)" FontSize="13" FontWeight="SemiBold"/>
-                                    <TextBlock Text="손글씨 자동 채점 후 망각 곡선 데이터에 반영" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+                                    <TextBlock Text="작성한 시험지 사진 채점 (OCR)" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                    <TextBlock Text="손글씨 자동 채점 후 망각 곡선 데이터에 반영" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0"/>
                                 </StackPanel>
                                 <Button Grid.Column="2" Style="{StaticResource SecondaryButton}" Command="{Binding OpenGradingCommand}" Content="사진 채점" VerticalAlignment="Center"/>
                             </Grid>
@@ -280,21 +280,21 @@
                 <!-- Right: Due Kanji Preview List -->
                 <Border Grid.Column="2" Style="{StaticResource TailscaleCard}">
                     <StackPanel>
-                        <TextBlock Text="오늘 복습 대기 중인 한자 미리보기" FontSize="14" FontWeight="Bold" Margin="0,0,0,12"/>
+                        <TextBlock Text="오늘 복습 대기 중인 한자 미리보기" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,12"/>
                         <ItemsControl ItemsSource="{Binding QuickReviewPreview}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Margin="0,0,0,6" Padding="10,8" Background="{StaticResource BgCardSecondaryBrush}" CornerRadius="6">
+                                    <Border Margin="0,0,0,6" Padding="10,8" Background="{DynamicResource BgCardSecondaryBrush}" CornerRadius="6">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="40"/>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Text="{Binding Kanji}" FontFamily="{StaticResource KanjiFont}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Kanji}" FontFamily="{StaticResource KanjiFont}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
                                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0">
-                                                <TextBlock Text="{Binding MeaningKo}" FontSize="12" FontWeight="SemiBold"/>
-                                                <TextBlock Text="{Binding AllReadings}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                                <TextBlock Text="{Binding MeaningKo}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                <TextBlock Text="{Binding AllReadings}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                             </StackPanel>
                                             <Border Grid.Column="2" CornerRadius="6" Padding="6,2" VerticalAlignment="Center"
                                                     Background="{Binding Level, Converter={StaticResource LevelColorConv}}">

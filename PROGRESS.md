@@ -71,3 +71,13 @@ A Tailscale-aesthetic WPF desktop application for learning Japanese Kanji and Vo
   - Added GitHub Actions `.github/workflows/build-and-release.yml` for automated testing, compilation, and GitHub Release deployment.
   - Published compiled Windows x64 binaries to `release/BenkyoKanji-v1.0.0-win-x64/`.
   - Created and pushed Git release tag `v1.0.0`.
+
+### [Step 8] High-Contrast Dark & Light Theme Modes
+- **Date**: 2026-08-21
+- **Commit Message**: `FEATURE: Implement high-contrast Dark and Light theme modes with dynamic switching`
+- **Context**:
+  - Created `DarkTheme.xaml` (Tailscale Deep Charcoal) and `LightTheme.xaml` (Tailscale Pure White & High-Contrast Slate).
+  - Built `ThemeManager` service for runtime dynamic theme resource swapping without application restart.
+  - Converted all views and UI components to `{DynamicResource}` bindings for consistent font contrast across light/dark modes.
+  - Added quick sidebar theme switcher and Settings View theme selector.
+  - Updated compiled release package in `release/BenkyoKanji-v1.0.0-win-x64/`.

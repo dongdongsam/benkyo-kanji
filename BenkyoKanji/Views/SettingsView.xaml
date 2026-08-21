@@ -3,8 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:conv="clr-namespace:BenkyoKanji.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="900">
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolVisConv" />
+    </UserControl.Resources>
+
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <Grid Margin="24">
             <Grid.RowDefinitions>
@@ -14,15 +19,45 @@
 
             <!-- Header -->
             <StackPanel Grid.Row="0" Margin="0,0,0,20">
-                <TextBlock Text="환경 설정 및 데이터 관리" FontSize="20" FontWeight="Bold"/>
-                <TextBlock Text="일일 목표 학습량, OCR 채점 기준, AI 비전 API 및 JSON 데이터 백업을 관리합니다." FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+                <TextBlock Text="환경 설정 및 데이터 관리" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBlock Text="테마 모드, 일일 목표 학습량, OCR 채점 기준, AI 비전 API 및 JSON 데이터 백업을 관리합니다." FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0"/>
             </StackPanel>
 
             <StackPanel Grid.Row="1" MaxWidth="700" HorizontalAlignment="Left">
+                <!-- Theme Mode Selection Card -->
+                <Border Style="{StaticResource TailscaleCard}" Margin="0,0,0,16">
+                    <StackPanel>
+                        <TextBlock Text="화면 테마 설정 (Dark / Light Mode)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,12"/>
+                        <TextBlock Text="시각적 편의 및 해상도에 맞춰 다크 모드와 고대비 라이트 모드를 선택할 수 있습니다." FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,12"/>
+
+                        <UniformGrid Columns="2" Margin="0,0,0,4">
+                            <!-- Dark Theme Option -->
+                            <Border Margin="0,0,6,0" Padding="12" CornerRadius="8" Background="{DynamicResource BgCardSecondaryBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                                <StackPanel>
+                                    <RadioButton Content="🌙 다크 모드 (Tailscale Dark)" FontSize="13" FontWeight="Bold"
+                                                 IsChecked="{Binding Theme, Converter={StaticResource BoolVisConv}, ConverterParameter=Dark}"
+                                                 Command="{Binding SetThemeCommand}" CommandParameter="Dark"/>
+                                    <TextBlock Text="딥 차콜 &amp; 슬레이트 배경으로 눈의 피로를 덜어줍니다." FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="20,4,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Light Theme Option -->
+                            <Border Margin="6,0,0,0" Padding="12" CornerRadius="8" Background="{DynamicResource BgCardSecondaryBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                                <StackPanel>
+                                    <RadioButton Content="☀️ 라이트 모드 (Tailscale Clean Light)" FontSize="13" FontWeight="Bold"
+                                                 IsChecked="{Binding Theme, Converter={StaticResource BoolVisConv}, ConverterParameter=Light}"
+                                                 Command="{Binding SetThemeCommand}" CommandParameter="Light"/>
+                                    <TextBlock Text="순백색 카드 &amp; 고대비 텍스트로 밝은 곳에서 선명합니다." FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="20,4,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </UniformGrid>
+                    </StackPanel>
+                </Border>
+
                 <!-- Daily Goals Card -->
                 <Border Style="{StaticResource TailscaleCard}" Margin="0,0,0,16">
                     <StackPanel>
-                        <TextBlock Text="일일 한자 학습 목표" FontSize="14" FontWeight="Bold" Margin="0,0,0,12"/>
+                        <TextBlock Text="일일 한자 학습 목표" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,12"/>
 
                         <!-- New cards goal -->
                         <Grid Margin="0,0,0,12">
@@ -31,8 +66,8 @@
                                 <ColumnDefinition Width="100"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="하루 신규 학습 한자 수" FontSize="13" FontWeight="SemiBold"/>
-                                <TextBlock Text="매일 새로 배울 단어의 기본 할당량입니다." FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                <TextBlock Text="하루 신규 학습 한자 수" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="매일 새로 배울 단어의 기본 할당량입니다." FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                             </StackPanel>
                             <TextBox Grid.Column="1" Text="{Binding DailyNewGoal, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
                         </Grid>
@@ -44,8 +79,8 @@
                                 <ColumnDefinition Width="100"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="하루 복습 목표량" FontSize="13" FontWeight="SemiBold"/>
-                                <TextBlock Text="망각 곡선에 의해 도래한 복습 단어 일일 목표치입니다." FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                <TextBlock Text="하루 복습 목표량" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="망각 곡선에 의해 도래한 복습 단어 일일 목표치입니다." FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                             </StackPanel>
                             <TextBox Grid.Column="1" Text="{Binding DailyReviewGoal, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
                         </Grid>
@@ -55,30 +90,30 @@
                 <!-- OCR & Grading Sensitivity Card -->
                 <Border Style="{StaticResource TailscaleCard}" Margin="0,0,0,16">
                     <StackPanel>
-                        <TextBlock Text="손글씨 OCR 자동 채점 정밀도" FontSize="14" FontWeight="Bold" Margin="0,0,0,12"/>
+                        <TextBlock Text="손글씨 OCR 자동 채점 정밀도" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,12"/>
 
                         <Grid Margin="0,0,0,8">
-                            <TextBlock Text="정답 판정 유사도 임계치" FontSize="13" FontWeight="SemiBold"/>
-                            <TextBlock Text="{Binding AutoGradingThreshold, StringFormat='{}{0:P0}'}" FontSize="13" FontWeight="Bold" Foreground="#818cf8" HorizontalAlignment="Right"/>
+                            <TextBlock Text="정답 판정 유사도 임계치" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            <TextBlock Text="{Binding AutoGradingThreshold, StringFormat='{}{0:P0}'}" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Right"/>
                         </Grid>
                         <Slider Minimum="0.50" Maximum="0.95" SmallChange="0.05" LargeChange="0.10"
                                 Value="{Binding AutoGradingThreshold}" Margin="0,0,0,6"/>
-                        <TextBlock Text="기본값 75%. 값이 높을수록 엄격하게 글자 일치 여부를 판정합니다." FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Text="기본값 75%. 값이 높을수록 엄격하게 글자 일치 여부를 판정합니다." FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Optional Cloud Vision API Card -->
                 <Border Style="{StaticResource TailscaleCard}" Margin="0,0,0,16">
                     <StackPanel>
-                        <TextBlock Text="선택 사항: AI Vision API 연동" FontSize="14" FontWeight="Bold" Margin="0,0,0,4"/>
-                        <TextBlock Text="Windows 10/11 기본 OCR 외에 Google Gemini 또는 OpenAI Vision을 통한 고난도 필기 인식을 지원합니다." FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,12"/>
+                        <TextBlock Text="선택 사항: AI Vision API 연동" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4"/>
+                        <TextBlock Text="Windows 10/11 기본 OCR 외에 Google Gemini 또는 OpenAI Vision을 통한 고난도 필기 인식을 지원합니다." FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,12"/>
 
                         <!-- Gemini Key -->
-                        <TextBlock Text="Gemini API Key" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,4"/>
+                        <TextBlock Text="Gemini API Key" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4"/>
                         <TextBox Text="{Binding GeminiApiKey, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10"/>
 
                         <!-- OpenAI Key -->
-                        <TextBlock Text="OpenAI API Key" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,4"/>
+                        <TextBlock Text="OpenAI API Key" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4"/>
                         <TextBox Text="{Binding OpenAiApiKey, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,4"/>
                     </StackPanel>
                 </Border>
@@ -86,10 +121,10 @@
                 <!-- JSON Data Management Card -->
                 <Border Style="{StaticResource TailscaleCard}" Margin="0,0,0,20">
                     <StackPanel>
-                        <TextBlock Text="JSON 데이터 백업 및 복원" FontSize="14" FontWeight="Bold" Margin="0,0,0,4"/>
-                        <TextBlock Text="모든 단어장, 망각 곡선 복습 기록 및 시험지 내역이 표준 JSON 형식으로 저장됩니다." FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,12"/>
+                        <TextBlock Text="JSON 데이터 백업 및 복원" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4"/>
+                        <TextBlock Text="모든 단어장, 망각 곡선 복습 기록 및 시험지 내역이 표준 JSON 형식으로 저장됩니다." FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,12"/>
 
-                        <TextBlock Text="로컬 저장 경로" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,4"/>
+                        <TextBlock Text="로컬 저장 경로" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4"/>
                         <TextBox Text="{Binding DataDirectoryPath}" IsReadOnly="True" Margin="0,0,0,12"/>
 
                         <StackPanel Orientation="Horizontal">

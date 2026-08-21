@@ -29,13 +29,13 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="{Binding SessionTitle}" FontSize="20" FontWeight="Bold"/>
-                <TextBlock Text="에빙하우스 망각 곡선에 의거한 맞춤형 복습 주기 산출" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+                <TextBlock Text="{Binding SessionTitle}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBlock Text="에빙하우스 망각 곡선에 의거한 맞춤형 복습 주기 산출" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                <Border Style="{StaticResource TailscalePill}" Background="#1e1b4b" Margin="0,0,8,0">
-                    <TextBlock Text="{Binding ProgressDisplay, StringFormat='진행: {0}'}" FontSize="12" Foreground="#c7d2fe" FontWeight="SemiBold"/>
+                <Border Style="{StaticResource TailscalePill}" Background="{DynamicResource AccentBadgeBgBrush}" BorderBrush="{DynamicResource AccentBrush}" Margin="0,0,8,0">
+                    <TextBlock Text="{Binding ProgressDisplay, StringFormat='진행: {0}'}" FontSize="12" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="SemiBold"/>
                 </Border>
                 <Button Style="{StaticResource SecondaryButton}" Command="{Binding StartDueReviewCommand}" Content="복습 다시 시작" Margin="0,0,6,0" FontSize="12"/>
                 <Button Style="{StaticResource SecondaryButton}" Command="{Binding StartNewCardsCommand}" Content="새 단어 학습" FontSize="12"/>
@@ -45,7 +45,7 @@
         <!-- Main Card Area (When in session) -->
         <Grid Grid.Row="1" Visibility="{Binding IsSessionComplete, Converter={StaticResource InvertBoolVisConv}}">
             <Border Style="{StaticResource TailscaleCard}" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                    Width="600" MinHeight="360" Cursor="Hand" Background="{StaticResource BgCardBrush}">
+                    Width="600" MinHeight="360" Cursor="Hand" Background="{DynamicResource BgCardBrush}">
                 <Border.InputBindings>
                     <MouseBinding Gesture="LeftClick" Command="{Binding FlipCardCommand}"/>
                 </Border.InputBindings>
@@ -60,15 +60,15 @@
                                 <TextBlock Text="{Binding CurrentKanji.LevelDisplay}" FontSize="11" Foreground="White" FontWeight="Bold"/>
                             </Border>
                             <Border Style="{StaticResource TailscalePill}">
-                                <TextBlock Text="{Binding CurrentKanji.StrokeCount, StringFormat='{}{0}획'}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                <TextBlock Text="{Binding CurrentKanji.StrokeCount, StringFormat='{}{0}획'}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                             </Border>
                         </StackPanel>
 
                         <!-- Big Kanji Display -->
                         <TextBlock Text="{Binding CurrentKanji.Kanji}" FontFamily="{StaticResource KanjiFont}"
-                                   FontSize="88" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                                   FontSize="88" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,16"/>
 
-                        <TextBlock Text="클릭하거나 스페이스바를 눌러 정답 및 음훈독 확인" FontSize="12" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center"/>
+                        <TextBlock Text="클릭하거나 스페이스바를 눌러 정답 및 음훈독 확인" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center"/>
                     </StackPanel>
 
                     <!-- Back View (Card Flipped) -->
@@ -83,11 +83,11 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Text="{Binding CurrentKanji.Kanji}" FontFamily="{StaticResource KanjiFont}"
-                                           FontSize="54" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,16,0"/>
+                                           FontSize="54" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" Margin="0,0,16,0"/>
 
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding CurrentKanji.MeaningKo}" FontSize="20" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
-                                    <TextBlock Text="{Binding CurrentKanji.MeaningEn}" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+                                    <TextBlock Text="{Binding CurrentKanji.MeaningKo}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                    <TextBlock Text="{Binding CurrentKanji.MeaningEn}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0"/>
                                 </StackPanel>
                             </Grid>
 
@@ -101,33 +101,33 @@
 
                                     <!-- Onyomi -->
                                     <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                                        <TextBlock Text="음독 (音読み)" FontSize="11" Foreground="#818cf8" FontWeight="Bold" Margin="0,0,0,4"/>
-                                        <TextBlock Text="{Binding CurrentKanji.Onyomi}" FontSize="15" FontWeight="SemiBold"/>
+                                        <TextBlock Text="음독 (音読み)" FontSize="11" Foreground="{DynamicResource AccentBrush}" FontWeight="Bold" Margin="0,0,0,4"/>
+                                        <TextBlock Text="{Binding CurrentKanji.Onyomi}" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
                                     </StackPanel>
 
                                     <!-- Kunyomi -->
                                     <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                                        <TextBlock Text="훈독 (訓読み)" FontSize="11" Foreground="#34d399" FontWeight="Bold" Margin="0,0,0,4"/>
-                                        <TextBlock Text="{Binding CurrentKanji.Kunyomi}" FontSize="15" FontWeight="SemiBold"/>
+                                        <TextBlock Text="훈독 (訓読み)" FontSize="11" Foreground="{DynamicResource SuccessBrush}" FontWeight="Bold" Margin="0,0,0,4"/>
+                                        <TextBlock Text="{Binding CurrentKanji.Kunyomi}" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>
 
                             <!-- Examples List -->
-                            <TextBlock Text="대표 활용 어휘 및 예문" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <TextBlock Text="대표 활용 어휘 및 예문" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" Margin="0,0,0,6"/>
                             <ItemsControl ItemsSource="{Binding CurrentKanji.Examples}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Border Margin="0,0,0,6" Padding="8" Background="{StaticResource BgCardSecondaryBrush}" CornerRadius="6">
+                                        <Border Margin="0,0,0,6" Padding="8" Background="{DynamicResource BgCardSecondaryBrush}" CornerRadius="6">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="*"/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Text="{Binding Word}" FontSize="14" FontWeight="Bold" Margin="0,0,8,0"/>
-                                                <TextBlock Grid.Column="1" Text="{Binding Reading, StringFormat='[{0}]'}" FontSize="12" Foreground="#818cf8" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                                <TextBlock Grid.Column="2" Text="{Binding Meaning}" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding Word}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,8,0"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Reading, StringFormat='[{0}]'}" FontSize="12" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding Meaning}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                                             </Grid>
                                         </Border>
                                     </DataTemplate>
@@ -136,10 +136,10 @@
 
                             <!-- SRS Next Interval Hint -->
                             <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                <TextBlock Text="현재 암기 단계: " FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
-                                <TextBlock Text="{Binding CurrentRecord.Status}" FontSize="11" Foreground="#a5b4fc" FontWeight="SemiBold" Margin="0,0,12,0"/>
-                                <TextBlock Text="누적 반복: " FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
-                                <TextBlock Text="{Binding CurrentRecord.Repetitions, StringFormat='{}{0}회'}" FontSize="11" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                <TextBlock Text="현재 암기 단계: " FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBlock Text="{Binding CurrentRecord.Status}" FontSize="11" Foreground="{DynamicResource AccentBrush}" FontWeight="SemiBold" Margin="0,0,12,0"/>
+                                <TextBlock Text="누적 반복: " FontSize="11" Foreground="{DynamicResource TextMutedBrush}"/>
+                                <TextBlock Text="{Binding CurrentRecord.Repetitions, StringFormat='{}{0}회'}" FontSize="11" Foreground="{DynamicResource TextPrimaryBrush}"/>
                             </StackPanel>
                         </StackPanel>
                     </ScrollViewer>
@@ -151,28 +151,28 @@
         <Grid Grid.Row="1" Visibility="{Binding IsSessionComplete, Converter={StaticResource BoolVisConv}}">
             <Border Style="{StaticResource TailscaleCard}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="500" Padding="32">
                 <StackPanel HorizontalAlignment="Center">
-                    <Border Background="#064e3b" Width="56" Height="56" CornerRadius="28" HorizontalAlignment="Center" Margin="0,0,0,16">
-                        <Path Data="{StaticResource IconCheck}" Fill="#34d399" Width="24" Height="24" Stretch="Uniform"/>
+                    <Border Background="{DynamicResource SuccessBadgeBgBrush}" Width="56" Height="56" CornerRadius="28" HorizontalAlignment="Center" Margin="0,0,0,16">
+                        <Path Data="{StaticResource IconCheck}" Fill="{DynamicResource SuccessBrush}" Width="24" Height="24" Stretch="Uniform"/>
                     </Border>
-                    <TextBlock Text="세션 완료! 수고하셨습니다." FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="망각 곡선 알고리즘에 의해 각 단어의 다음 복습일이 자동 산정되었습니다." FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,6,0,24" TextWrapping="Wrap" TextAlignment="Center"/>
+                    <TextBlock Text="세션 완료! 수고하셨습니다." FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="망각 곡선 알고리즘에 의해 각 단어의 다음 복습일이 자동 산정되었습니다." FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,6,0,24" TextWrapping="Wrap" TextAlignment="Center"/>
 
                     <UniformGrid Columns="4" Margin="0,0,0,24">
                         <StackPanel HorizontalAlignment="Center">
-                            <TextBlock Text="다시" FontSize="11" Foreground="#f87171"/>
-                            <TextBlock Text="{Binding AgainCount}" FontSize="18" FontWeight="Bold" Foreground="#f87171" HorizontalAlignment="Center"/>
+                            <TextBlock Text="다시" FontSize="11" Foreground="{DynamicResource DangerBrush}"/>
+                            <TextBlock Text="{Binding AgainCount}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel HorizontalAlignment="Center">
-                            <TextBlock Text="어려움" FontSize="11" Foreground="#fbbf24"/>
-                            <TextBlock Text="{Binding HardCount}" FontSize="18" FontWeight="Bold" Foreground="#fbbf24" HorizontalAlignment="Center"/>
+                            <TextBlock Text="어려움" FontSize="11" Foreground="{DynamicResource WarningBrush}"/>
+                            <TextBlock Text="{Binding HardCount}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource WarningBrush}" HorizontalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel HorizontalAlignment="Center">
-                            <TextBlock Text="알맞음" FontSize="11" Foreground="#818cf8"/>
-                            <TextBlock Text="{Binding GoodCount}" FontSize="18" FontWeight="Bold" Foreground="#818cf8" HorizontalAlignment="Center"/>
+                            <TextBlock Text="알맞음" FontSize="11" Foreground="{DynamicResource AccentBrush}"/>
+                            <TextBlock Text="{Binding GoodCount}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel HorizontalAlignment="Center">
-                            <TextBlock Text="쉬움" FontSize="11" Foreground="#34d399"/>
-                            <TextBlock Text="{Binding EasyCount}" FontSize="18" FontWeight="Bold" Foreground="#34d399" HorizontalAlignment="Center"/>
+                            <TextBlock Text="쉬움" FontSize="11" Foreground="{DynamicResource SuccessBrush}"/>
+                            <TextBlock Text="{Binding EasyCount}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </UniformGrid>
 
@@ -189,8 +189,8 @@
                 <Button Style="{StaticResource DangerButton}" Margin="4" Padding="12,10"
                         Command="{Binding RateCardCommand}" CommandParameter="{x:Static models:ReviewRating.Again}">
                     <StackPanel>
-                        <TextBlock Text="[1] 다시 (Again)" FontWeight="Bold" FontSize="13" HorizontalAlignment="Center"/>
-                        <TextBlock Text="기억 안 남 (1일 후)" FontSize="10" Foreground="#fecaca" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                        <TextBlock Text="[1] 다시 (Again)" FontWeight="Bold" FontSize="13" Foreground="White" HorizontalAlignment="Center"/>
+                        <TextBlock Text="기억 안 남 (1일 후)" FontSize="10" Foreground="White" Opacity="0.85" HorizontalAlignment="Center" Margin="0,2,0,0"/>
                     </StackPanel>
                 </Button>
 
@@ -198,8 +198,8 @@
                 <Button Style="{StaticResource SecondaryButton}" Margin="4" Padding="12,10"
                         Command="{Binding RateCardCommand}" CommandParameter="{x:Static models:ReviewRating.Hard}">
                     <StackPanel>
-                        <TextBlock Text="[2] 어려움 (Hard)" FontWeight="Bold" FontSize="13" HorizontalAlignment="Center" Foreground="#fbbf24"/>
-                        <TextBlock Text="겨우 기억남" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                        <TextBlock Text="[2] 어려움 (Hard)" FontWeight="Bold" FontSize="13" HorizontalAlignment="Center" Foreground="{DynamicResource WarningBrush}"/>
+                        <TextBlock Text="겨우 기억남" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center" Margin="0,2,0,0"/>
                     </StackPanel>
                 </Button>
 
@@ -207,8 +207,8 @@
                 <Button Style="{StaticResource PrimaryButton}" Margin="4" Padding="12,10"
                         Command="{Binding RateCardCommand}" CommandParameter="{x:Static models:ReviewRating.Good}">
                     <StackPanel>
-                        <TextBlock Text="[3] 알맞음 (Good)" FontWeight="Bold" FontSize="13" HorizontalAlignment="Center"/>
-                        <TextBlock Text="표준 복습 주기" FontSize="10" Foreground="#c7d2fe" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                        <TextBlock Text="[3] 알맞음 (Good)" FontWeight="Bold" FontSize="13" Foreground="White" HorizontalAlignment="Center"/>
+                        <TextBlock Text="표준 복습 주기" FontSize="10" Foreground="White" Opacity="0.85" HorizontalAlignment="Center" Margin="0,2,0,0"/>
                     </StackPanel>
                 </Button>
 
@@ -216,8 +216,8 @@
                 <Button Style="{StaticResource SuccessButton}" Margin="4" Padding="12,10"
                         Command="{Binding RateCardCommand}" CommandParameter="{x:Static models:ReviewRating.Easy}">
                     <StackPanel>
-                        <TextBlock Text="[4] 쉬움 (Easy)" FontWeight="Bold" FontSize="13" HorizontalAlignment="Center"/>
-                        <TextBlock Text="완벽히 기억 (주기 대폭 연장)" FontSize="10" Foreground="#a7f3d0" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                        <TextBlock Text="[4] 쉬움 (Easy)" FontWeight="Bold" FontSize="13" Foreground="White" HorizontalAlignment="Center"/>
+                        <TextBlock Text="완벽히 기억 (대폭 연장)" FontSize="10" Foreground="White" Opacity="0.85" HorizontalAlignment="Center" Margin="0,2,0,0"/>
                     </StackPanel>
                 </Button>
             </UniformGrid>

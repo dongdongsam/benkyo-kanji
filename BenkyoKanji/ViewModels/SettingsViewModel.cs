@@ -16,6 +16,7 @@ public class SettingsViewModel : ViewModelBase
     private string? _geminiApiKey;
     private string? _openAiApiKey;
     private string _dataDirectoryPath = string.Empty;
+    private string _theme = "Dark";
 
     public int DailyNewGoal
     {
@@ -53,9 +54,22 @@ public class SettingsViewModel : ViewModelBase
         set => SetProperty(ref _dataDirectoryPath, value);
     }
 
+    public string Theme
+    {
+        get => _theme;
+        set
+        {
+            if (SetProperty(ref _theme, value))
+            {
+                ThemeManager.ApplyTheme(value);
+            }
+        }
+    }
+
     public IRelayCommand SaveSettingsCommand { get; }
     public IRelayCommand ExportBackupCommand { get; }
     public IRelayCommand ImportBackupCommand { get; }
+    public IRelayCommand<string> SetThemeCommand { get; }
 
     public SettingsViewModel(ISrsEngineService srsService, IJsonStorageService storageService)
     {
@@ -66,6 +80,7 @@ public class SettingsViewModel : ViewModelBase
         SaveSettingsCommand = new AsyncRelayCommand(SaveSettingsAsync);
         ExportBackupCommand = new AsyncRelayCommand(ExportBackupAsync);
         ImportBackupCommand = new AsyncRelayCommand(ImportBackupAsync);
+        SetThemeCommand = new RelayCommand<string>(SetTheme);
     }
 
     public override async Task InitializeAsync()
@@ -76,6 +91,13 @@ public class SettingsViewModel : ViewModelBase
         AutoGradingThreshold = profile.AutoGradingThreshold;
         GeminiApiKey = profile.GeminiApiKey;
         OpenAiApiKey = profile.OpenAiApiKey;
+        Theme = profile.Theme;
+    }
+
+    private void SetTheme(string? theme)
+    {
+        if (string.IsNullOrWhiteSpace(theme)) return;
+        Theme = theme;
     }
 
     private async Task SaveSettingsAsync()
@@ -89,6 +111,7 @@ public class SettingsViewModel : ViewModelBase
             profile.AutoGradingThreshold = AutoGradingThreshold;
             profile.GeminiApiKey = GeminiApiKey;
             profile.OpenAiApiKey = OpenAiApiKey;
+            profile.Theme = Theme;
 
             await _srsService.UpdateUserProfileAsync(profile);
             StatusMessage = "설정이 성공적으로 저장되었습니다.";
