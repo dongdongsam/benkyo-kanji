@@ -46,3 +46,10 @@ A Tailscale-aesthetic WPF desktop application for learning Japanese Kanji and Vo
 - **Context**:
   - 19 automated xUnit tests covering SRS transitions, ease factor calculations, repository search, PDF byte signatures, OCR similarity matching, and JSON backup/restore.
   - Generated `samples/sample_kanji_quiz.pdf` and `samples/sample_completed_worksheet.png`.
+
+### [Step 5] Bilingual Documentation & Branch Management
+- **Date**: 2026-08-21
+- **Commit Message**: `ADDED: Add bilingual documentation and configure branch structure`
+- **Context**:
+  - Updated `README.md` to fully support English and Korean side-by-side.
+  - Established 3-tier branching model: `main` (Production/Release), `test` (Testing/QA), `develop` (Active Development).
