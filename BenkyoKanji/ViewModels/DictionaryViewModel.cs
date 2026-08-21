@@ -172,6 +172,7 @@ public class DictionaryViewModel : ViewModelBase
 
     private void FilterItems()
     {
+        var prevId = SelectedKanji?.Id;
         var results = _kanjiRepo.Search(SearchQuery, SelectedLevel);
         FilteredItems.Clear();
         foreach (var item in results)
@@ -179,9 +180,14 @@ public class DictionaryViewModel : ViewModelBase
             FilteredItems.Add(item);
         }
 
-        if (FilteredItems.Count > 0 && SelectedKanji == null)
+        if (FilteredItems.Count > 0)
         {
-            SelectedKanji = FilteredItems[0];
+            var match = FilteredItems.FirstOrDefault(k => k.Id == prevId);
+            SelectedKanji = match ?? FilteredItems[0];
+        }
+        else
+        {
+            SelectedKanji = null;
         }
     }
 

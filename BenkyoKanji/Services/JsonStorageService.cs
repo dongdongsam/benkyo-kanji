@@ -75,9 +75,9 @@ public class JsonStorageService : IJsonStorageService
                 var items = JsonSerializer.Deserialize<List<KanjiItem>>(json, _jsonOptions);
                 if (items != null && items.Count > 0)
                 {
-                    // Check if existing library has old placeholder/untranslated data
-                    bool hasOldPlaceholders = items.Take(200).Any(k => !k.IsCustom && (k.MeaningKo.StartsWith("한자 (") || k.MeaningKo == "한자" || string.IsNullOrWhiteSpace(k.MeaningKo)));
-                    if (!hasOldPlaceholders)
+                    // Check if existing library has old placeholder/untranslated data OR if it's the uncurated 13,000 items
+                    bool needsUpgrade = items.Count > 2500 || items.Any(k => !k.IsCustom && (k.MeaningKo.Contains("한자") || k.MeaningKo.Contains("Dream") || k.MeaningKo.Contains("?") || k.MeaningKo.Contains("(") || string.IsNullOrWhiteSpace(k.MeaningKo) || System.Text.RegularExpressions.Regex.IsMatch(k.MeaningKo, "[a-zA-Z]")));
+                    if (!needsUpgrade)
                     {
                         return items;
                     }
