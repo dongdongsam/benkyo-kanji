@@ -1,0 +1,251 @@
+<UserControl x:Class="BenkyoKanji.Views.GradingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:conv="clr-namespace:BenkyoKanji.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="750" d:DesignWidth="1000">
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolVisConv" />
+        <conv:BoolToVisibilityConverter x:Key="InvertBoolVisConv" Invert="True" />
+        <conv:GradingStatusToBrushConverter x:Key="GradingColorConv" />
+    </UserControl.Resources>
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Top Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="손글씨 시험지 사진 자동 채점 (OCR Scanner)" FontSize="20" FontWeight="Bold"/>
+                <TextBlock Text="사용자가 빈칸을 채운 종이 사진을 업로드하면 OCR로 글자를 인식해 자동 채점하고 에빙하우스 망각 곡선에 즉시 반영합니다." FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Style="{StaticResource SuccessButton}" Command="{Binding SyncToSrsCommand}" 
+                        IsEnabled="{Binding HasGraded}" Padding="18,10">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Data="{StaticResource IconCheck}" Fill="White" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
+                        <TextBlock Text="{Binding SyncButtonText}" FontWeight="Bold"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- 2-Column Layout -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="380"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left: Photo Upload & Image Preview -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Upload Actions Card -->
+                <Border Grid.Row="0" Style="{StaticResource TailscaleCard}" Margin="0,0,0,12">
+                    <StackPanel>
+                        <TextBlock Text="사진 업로드" FontSize="13" FontWeight="Bold" Margin="0,0,0,8"/>
+
+                        <UniformGrid Columns="2" Margin="0,0,0,8">
+                            <Button Style="{StaticResource SecondaryButton}" Command="{Binding BrowseImageCommand}" Margin="0,0,4,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="{StaticResource IconUpload}" Fill="{StaticResource TextPrimaryBrush}" Width="12" Height="12" Stretch="Uniform" Margin="0,0,6,0"/>
+                                    <TextBlock Text="사진 파일 선택" FontSize="12"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource SecondaryButton}" Command="{Binding PasteClipboardCommand}" Margin="4,0,0,0">
+                                <TextBlock Text="클립보드 붙여넣기" FontSize="12"/>
+                            </Button>
+                        </UniformGrid>
+
+                        <TextBlock Text="{Binding SelectedImagePath, FallbackValue='선택된 파일 없음'}" FontSize="10" Foreground="{StaticResource TextMutedBrush}" TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Image Preview Box -->
+                <Border Grid.Row="1" Style="{StaticResource TailscaleCard}" Padding="8" Margin="0,0,0,12"
+                        AllowDrop="True" Drop="ImageDropBox_Drop" DragOver="ImageDropBox_DragOver">
+                    <Grid>
+                        <!-- When No Image -->
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    Visibility="{Binding PreviewImage, Converter={StaticResource InvertBoolVisConv}}">
+                            <Border Background="#1e1b4b" Width="48" Height="48" CornerRadius="24" HorizontalAlignment="Center" Margin="0,0,0,12">
+                                <Path Data="{StaticResource IconUpload}" Fill="#818cf8" Width="20" Height="20" Stretch="Uniform"/>
+                            </Border>
+                            <TextBlock Text="손글씨 시험지 사진을 이곳에 드래그 앤 드롭하세요" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                            <TextBlock Text="JPG, PNG, WEBP, BMP 지원" FontSize="10.5" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                        </StackPanel>
+
+                        <!-- When Image Loaded -->
+                        <Image Source="{Binding PreviewImage}" Stretch="Uniform"
+                               Visibility="{Binding PreviewImage, Converter={StaticResource BoolVisConv}}"/>
+                    </Grid>
+                </Border>
+
+                <!-- Run Grading Button -->
+                <Button Grid.Row="2" Style="{StaticResource PrimaryButton}" Command="{Binding RunGradingCommand}" Padding="16,12">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Data="{StaticResource IconGrading}" Fill="White" Width="16" Height="16" Stretch="Uniform" Margin="0,0,8,0"/>
+                        <TextBlock Text="OCR 자동 채점 분석 실행" FontSize="14" FontWeight="Bold"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <!-- Right: Grading Results & Feedback Table -->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Score Overview Card (Visible when graded) -->
+                <Border Grid.Row="0" Style="{StaticResource TailscaleCard}" Margin="0,0,0,14"
+                        Visibility="{Binding HasGraded, Converter={StaticResource BoolVisConv}}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Big Score Badge -->
+                        <Border Background="#1e1b4b" BorderBrush="#4338ca" BorderThickness="1" CornerRadius="10" Padding="16,10" Margin="0,0,16,0" VerticalAlignment="Center">
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock Text="총 득점" FontSize="10.5" Foreground="#a5b4fc" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding CurrentResult.ScorePercentage, StringFormat='{}{0:F0}점'}" FontSize="28" FontWeight="Bold" Foreground="#818cf8" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding CurrentResult.SummaryText}" FontSize="14" FontWeight="Bold" Margin="0,0,0,4"/>
+                            <TextBlock Text="{Binding CurrentResult.WorksheetId, StringFormat='매칭된 시험지 ID: {0}'}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                <Border Background="#064e3b" CornerRadius="4" Padding="6,2" Margin="0,0,6,0">
+                                    <TextBlock Text="{Binding CurrentResult.CorrectCount, StringFormat='정답: {0}'}" FontSize="10.5" Foreground="#34d399" FontWeight="Bold"/>
+                                </Border>
+                                <Border Background="#451a03" CornerRadius="4" Padding="6,2" Margin="0,0,6,0">
+                                    <TextBlock Text="{Binding CurrentResult.PartialCount, StringFormat='부분 정답: {0}'}" FontSize="10.5" Foreground="#fbbf24" FontWeight="Bold"/>
+                                </Border>
+                                <Border Background="#450a0a" CornerRadius="4" Padding="6,2">
+                                    <TextBlock Text="{Binding CurrentResult.IncorrectCount, StringFormat='오답: {0}'}" FontSize="10.5" Foreground="#f87171" FontWeight="Bold"/>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Detailed Table -->
+                <Border Grid.Row="1" Style="{StaticResource TailscaleCard}" Padding="0">
+                    <Grid>
+                        <!-- Placeholder when not graded -->
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    Visibility="{Binding HasGraded, Converter={StaticResource InvertBoolVisConv}}">
+                            <Border Background="#26252e" Width="48" Height="48" CornerRadius="24" HorizontalAlignment="Center" Margin="0,0,0,12">
+                                <Path Data="{StaticResource IconGrading}" Fill="{StaticResource TextMutedBrush}" Width="20" Height="20" Stretch="Uniform"/>
+                            </Border>
+                            <TextBlock Text="시험지 사진을 업로드하고 [자동 채점 분석]을 실행하세요" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                            <TextBlock Text="OCR로 추출된 손글씨와 모범 정답을 비교하여 문항별 채점 결과가 여기에 표시됩니다." FontSize="11" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                        </StackPanel>
+
+                        <!-- Table when graded -->
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                      Visibility="{Binding HasGraded, Converter={StaticResource BoolVisConv}}">
+                            <DataGrid ItemsSource="{Binding GradingItems}" AutoGenerateColumns="False" 
+                                      CanUserAddRows="False" IsReadOnly="True"
+                                      Background="Transparent" RowBackground="{StaticResource BgCardBrush}" AlternatingRowBackground="{StaticResource BgCardSecondaryBrush}"
+                                      BorderThickness="0" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{StaticResource BorderBrush}">
+                                <DataGrid.Resources>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="{StaticResource BgCardSecondaryBrush}"/>
+                                        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                        <Setter Property="FontSize" Value="11.5"/>
+                                        <Setter Property="Padding" Value="10,8"/>
+                                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+                                    </Style>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                                        <Setter Property="Padding" Value="10,8"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                    </Style>
+                                </DataGrid.Resources>
+
+                                <DataGrid.Columns>
+                                    <!-- Col 0: Index -->
+                                    <DataGridTextColumn Header="#" Binding="{Binding Index}" Width="35"/>
+
+                                    <!-- Col 1: Kanji -->
+                                    <DataGridTemplateColumn Header="대상 한자" Width="80">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Kanji}" FontFamily="{StaticResource KanjiFont}" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <!-- Col 2: Target Field -->
+                                    <DataGridTextColumn Header="채점 항목" Binding="{Binding TargetField}" Width="80"/>
+
+                                    <!-- Col 3: Expected Answer -->
+                                    <DataGridTextColumn Header="모범 정답" Binding="{Binding ExpectedAnswer}" Width="130"/>
+
+                                    <!-- Col 4: Recognized OCR Text -->
+                                    <DataGridTemplateColumn Header="인식된 손글씨" Width="140">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding RecognizedAnswer}" Foreground="#a5b4fc" FontWeight="Medium" VerticalAlignment="Center"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <!-- Col 5: Result Status Badge -->
+                                    <DataGridTemplateColumn Header="판정" Width="90">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Border Background="{Binding Status, Converter={StaticResource GradingColorConv}}" CornerRadius="4" Padding="6,2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Status}" FontSize="9.5" Foreground="White" FontWeight="Bold"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <!-- Col 6: Similarity -->
+                                    <DataGridTextColumn Header="유사도" Binding="{Binding Similarity, StringFormat='{}{0:P0}'}" Width="65"/>
+
+                                    <!-- Col 7: Override Toggle Action -->
+                                    <DataGridTemplateColumn Header="수정" Width="70">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Style="{StaticResource SecondaryButton}" Content="전환" FontSize="10.5" Padding="6,2"
+                                                        Command="{Binding DataContext.ToggleItemStatusCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -20,3 +20,29 @@ A Tailscale-aesthetic WPF desktop application for learning Japanese Kanji and Vo
 - **Date**: 2026-08-21
 - **Commit Message**: `ADDED: Initialize BenkyoKanji WPF solution and test projects`
 - **Context**: Configured `BenkyoKanji.sln`, `BenkyoKanji` (.NET 8 WPF with Windows SDK support), and `BenkyoKanji.Tests`. Added QuestPDF and CommunityToolkit.Mvvm dependencies. Set up `.gitignore`.
+
+### [Step 2] Complete Implementation of Core Models, Data Layer, and Services
+- **Date**: 2026-08-21
+- **Commit Message**: `FEATURE: Implement Spaced Repetition engine, PDF generator, and OCR auto-grading`
+- **Context**:
+  - **Models**: `KanjiItem`, `JlptLevel`, `KanjiExample`, `StudyRecord`, `ReviewLogEntry`, `UserProfile`, `WorksheetConfig`, `WorksheetItem`, `GradingResult`, `GradingItemResult`.
+  - **Data**: Seeded rich JLPT N5~N1 Kanji/Vocabulary dataset in `Data/kanji_dataset.json` with embedded resource fallback.
+  - **Storage**: Implemented `JsonStorageService` for persisting library, study records, profile, worksheets, and gradings, plus backup export/import.
+  - **SRS Engine**: Implemented `SrsEngineService` with calibrated Ebbinghaus / SM-2 algorithm, 4 mastery stages, streak tracker, and 7-day review forecast.
+  - **PDF Generator**: Implemented `PdfWorksheetService` using QuestPDF generating pixel-perfect A4 study sheets (Full Study Table, Kanji Quiz, Reading Quiz, Meaning Quiz, Mixed Quiz).
+  - **Auto-Grading**: Implemented `AutoGradingService` using `Windows.Media.Ocr`, Levenshtein fuzzy string similarity, worksheet ID pairing, and one-click SRS synchronization.
+
+### [Step 3] Tailscale-Themed Adaptive UI, MVVM ViewModels, and Views
+- **Date**: 2026-08-21
+- **Commit Message**: `FEATURE: Build Tailscale-styled adaptive WPF UI and view components`
+- **Context**:
+  - **Styles & Themes**: Designed `TailscaleTheme.xaml` and `Icons.xaml` vector icons adhering to Tailscale's dark slate palette and status indicators.
+  - **ViewModels**: Built `MainViewModel`, `DashboardViewModel`, `StudyReviewViewModel`, `WorksheetViewModel`, `GradingViewModel`, `DictionaryViewModel`, and `SettingsViewModel`.
+  - **Views**: Implemented `DashboardView`, `StudyReviewView` (with keyboard shortcuts 1..4, Space), `WorksheetView` (live preview & export), `GradingView` (drag-and-drop photo upload, OCR analysis & scoring), `DictionaryView`, and `SettingsView`.
+
+### [Step 4] Automated Test Suite & Sample Artifacts
+- **Date**: 2026-08-21
+- **Commit Message**: `ADDED: Add comprehensive xUnit test suite and sample worksheet artifacts`
+- **Context**:
+  - 19 automated xUnit tests covering SRS transitions, ease factor calculations, repository search, PDF byte signatures, OCR similarity matching, and JSON backup/restore.
+  - Generated `samples/sample_kanji_quiz.pdf` and `samples/sample_completed_worksheet.png`.

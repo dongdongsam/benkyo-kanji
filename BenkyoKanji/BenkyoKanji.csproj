@@ -13,4 +13,11 @@
     <PackageReference Include="QuestPDF" Version="2026.7.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Data\kanji_dataset.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <EmbeddedResource Include="Data\kanji_dataset.json" />
+  </ItemGroup>
+
 </Project>

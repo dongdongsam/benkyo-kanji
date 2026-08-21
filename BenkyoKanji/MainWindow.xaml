@@ -1,12 +1,164 @@
-﻿<Window x:Class="BenkyoKanji.MainWindow"
+<Window x:Class="BenkyoKanji.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BenkyoKanji"
+        xmlns:vm="clr-namespace:BenkyoKanji.ViewModels"
+        xmlns:views="clr-namespace:BenkyoKanji.Views"
+        xmlns:conv="clr-namespace:BenkyoKanji.Converters"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Benkyo Kanji (勉強漢字) - 에빙하우스 망각 곡선 한자 학습 &amp; PDF 시험지 채점기" 
+        Height="800" Width="1200" MinHeight="650" MinWidth="960"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BgCanvasBrush}"
+        Foreground="{StaticResource TextPrimaryBrush}">
 
+    <Window.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolVisConv" />
+        <conv:NullOrEmptyToVisibilityConverter x:Key="NullOrEmptyConv" />
+
+        <!-- ViewModel to View mappings -->
+        <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+            <views:DashboardView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:StudyReviewViewModel}">
+            <views:StudyReviewView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:WorksheetViewModel}">
+            <views:WorksheetView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:GradingViewModel}">
+            <views:GradingView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DictionaryViewModel}">
+            <views:DictionaryView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+            <views:SettingsView />
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="230"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Left Navigation Sidebar (Tailscale Aesthetic) -->
+        <Border Grid.Column="0" Background="{StaticResource BgSidebarBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+            <Grid Margin="16,20,16,16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- App Brand / Header -->
+                <StackPanel Grid.Row="0" Margin="0,0,0,24">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Background="#4f46e5" Width="32" Height="32" CornerRadius="8" Margin="0,0,10,0">
+                            <TextBlock Text="漢" FontFamily="{StaticResource KanjiFont}" FontSize="18" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="Benkyo Kanji" FontSize="15" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                            <TextBlock Text="勉強漢字 v1.0" FontSize="10.5" Foreground="{StaticResource TextMutedBrush}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Navigation Links -->
+                <StackPanel Grid.Row="1">
+                    <TextBlock Text="학습 &amp; 복습" FontSize="10.5" Foreground="{StaticResource TextMutedBrush}" FontWeight="SemiBold" Margin="8,0,0,6"/>
+
+                    <!-- Dashboard -->
+                    <RadioButton Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="Dashboard"
+                                 IsChecked="{Binding ActiveSection, Converter={StaticResource BoolVisConv}, ConverterParameter=Dashboard}">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource IconDashboard}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,10,0"/>
+                            <TextBlock Text="대시보드" FontSize="13"/>
+                        </StackPanel>
+                    </RadioButton>
+
+                    <!-- Study & Review -->
+                    <RadioButton Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="Study"
+                                 IsChecked="{Binding ActiveSection, Converter={StaticResource BoolVisConv}, ConverterParameter=Study}">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource IconStudy}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,10,0"/>
+                            <TextBlock Text="망각 곡선 복습" FontSize="13"/>
+                        </StackPanel>
+                    </RadioButton>
+
+                    <TextBlock Text="종이 출력 &amp; 채점" FontSize="10.5" Foreground="{StaticResource TextMutedBrush}" FontWeight="SemiBold" Margin="8,16,0,6"/>
+
+                    <!-- PDF Worksheet -->
+                    <RadioButton Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="Worksheet"
+                                 IsChecked="{Binding ActiveSection, Converter={StaticResource BoolVisConv}, ConverterParameter=Worksheet}">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource IconPdf}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,10,0"/>
+                            <TextBlock Text="PDF 시험지 생성" FontSize="13"/>
+                        </StackPanel>
+                    </RadioButton>
+
+                    <!-- Auto-Grading Scanner -->
+                    <RadioButton Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="Grading"
+                                 IsChecked="{Binding ActiveSection, Converter={StaticResource BoolVisConv}, ConverterParameter=Grading}">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource IconGrading}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,10,0"/>
+                            <TextBlock Text="사진 자동 채점" FontSize="13"/>
+                        </StackPanel>
+                    </RadioButton>
+
+                    <TextBlock Text="데이터" FontSize="10.5" Foreground="{StaticResource TextMutedBrush}" FontWeight="SemiBold" Margin="8,16,0,6"/>
+
+                    <!-- Kanji Dictionary -->
+                    <RadioButton Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="Dictionary"
+                                 IsChecked="{Binding ActiveSection, Converter={StaticResource BoolVisConv}, ConverterParameter=Dictionary}">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource IconDictionary}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,10,0"/>
+                            <TextBlock Text="한자·어휘 사전" FontSize="13"/>
+                        </StackPanel>
+                    </RadioButton>
+
+                    <!-- Settings -->
+                    <RadioButton Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="Settings"
+                                 IsChecked="{Binding ActiveSection, Converter={StaticResource BoolVisConv}, ConverterParameter=Settings}">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Data="{StaticResource IconSettings}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,10,0"/>
+                            <TextBlock Text="환경 설정" FontSize="13"/>
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+
+                <!-- Bottom Status Pill -->
+                <Border Grid.Row="2" Style="{StaticResource TailscaleSecondaryCard}" Padding="10,8">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Style="{StaticResource StatusDot}"/>
+                        <TextBlock Text="로컬 JSON 저장 활성" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Right Main Viewport Area -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Global Toast / Notification Bar -->
+            <Border Grid.Row="0" Background="#1e1b4b" BorderBrush="#4338ca" BorderThickness="0,0,0,1" Padding="16,8"
+                    Visibility="{Binding CurrentViewModel.StatusMessage, Converter={StaticResource NullOrEmptyConv}}">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Ellipse Width="6" Height="6" Fill="#818cf8" Margin="0,0,8,0"/>
+                        <TextBlock Text="{Binding CurrentViewModel.StatusMessage}" FontSize="12" Foreground="#c7d2fe"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Dynamic View Container -->
+            <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}"/>
+        </Grid>
     </Grid>
 </Window>

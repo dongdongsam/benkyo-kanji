@@ -1,0 +1,692 @@
+[
+  {
+    "Id": "n5-001",
+    "Kanji": "日",
+    "Onyomi": "ニチ, ジツ",
+    "Kunyomi": "ひ, -び, -か",
+    "MeaningKo": "날 일, 해, 날짜",
+    "MeaningEn": "day, sun, Japan",
+    "Level": 5,
+    "StrokeCount": 4,
+    "Radical": "日",
+    "Examples": [
+      { "Word": "日本", "Reading": "にほん", "Meaning": "일본" },
+      { "Word": "休日", "Reading": "きゅうじつ", "Meaning": "휴일" },
+      { "Word": "日曜日", "Reading": "にちようび", "Meaning": "일요일" }
+    ],
+    "Tags": ["N5", "기초", "시간"]
+  },
+  {
+    "Id": "n5-002",
+    "Kanji": "本",
+    "Onyomi": "ホン",
+    "Kunyomi": "もと",
+    "MeaningKo": "근본 본, 책",
+    "MeaningEn": "book, origin, main",
+    "Level": 5,
+    "StrokeCount": 5,
+    "Radical": "木",
+    "Examples": [
+      { "Word": "本", "Reading": "ほん", "Meaning": "책" },
+      { "Word": "本日", "Reading": "ほんじつ", "Meaning": "오늘 (격식)" },
+      { "Word": "本当", "Reading": "ほんとう", "Meaning": "진짜, 정말" }
+    ],
+    "Tags": ["N5", "기초", "물건"]
+  },
+  {
+    "Id": "n5-003",
+    "Kanji": "人",
+    "Onyomi": "ジン, ニン",
+    "Kunyomi": "ひと",
+    "MeaningKo": "사람 인",
+    "MeaningEn": "person, human",
+    "Level": 5,
+    "StrokeCount": 2,
+    "Radical": "人",
+    "Examples": [
+      { "Word": "日本人", "Reading": "にほんじん", "Meaning": "일본인" },
+      { "Word": "三人", "Reading": "さんにん", "Meaning": "세 사람" },
+      { "Word": "大人", "Reading": "おとな", "Meaning": "어른" }
+    ],
+    "Tags": ["N5", "기초", "사람"]
+  },
+  {
+    "Id": "n5-004",
+    "Kanji": "月",
+    "Onyomi": "ゲツ, ガツ",
+    "Kunyomi": "つき",
+    "MeaningKo": "달 월, 달, 개월",
+    "MeaningEn": "month, moon",
+    "Level": 5,
+    "StrokeCount": 4,
+    "Radical": "月",
+    "Examples": [
+      { "Word": "月曜日", "Reading": "げつようび", "Meaning": "월요일" },
+      { "Word": "今月", "Reading": "こんげつ", "Meaning": "이번 달" },
+      { "Word": "満月", "Reading": "まんげつ", "Meaning": "보름달" }
+    ],
+    "Tags": ["N5", "시간", "자연"]
+  },
+  {
+    "Id": "n5-005",
+    "Kanji": "火",
+    "Onyomi": "カ",
+    "Kunyomi": "ひ, ほ-",
+    "MeaningKo": "불 화",
+    "MeaningEn": "fire",
+    "Level": 5,
+    "StrokeCount": 4,
+    "Radical": "火",
+    "Examples": [
+      { "Word": "火曜日", "Reading": "かようび", "Meaning": "화요일" },
+      { "Word": "花火", "Reading": "はなび", "Meaning": "불꽃놀이" },
+      { "Word": "火事", "Reading": "かじ", "Meaning": "화재" }
+    ],
+    "Tags": ["N5", "원소", "시간"]
+  },
+  {
+    "Id": "n5-006",
+    "Kanji": "水",
+    "Onyomi": "スイ",
+    "Kunyomi": "みず",
+    "MeaningKo": "물 수",
+    "MeaningEn": "water",
+    "Level": 5,
+    "StrokeCount": 4,
+    "Radical": "水",
+    "Examples": [
+      { "Word": "水曜日", "Reading": "すいようび", "Meaning": "수요일" },
+      { "Word": "水泳", "Reading": "すいえい", "Meaning": "수영" },
+      { "Word": "お水", "Reading": "おみず", "Meaning": "물" }
+    ],
+    "Tags": ["N5", "자연"]
+  },
+  {
+    "Id": "n5-007",
+    "Kanji": "木",
+    "Onyomi": "ボク, モク",
+    "Kunyomi": "き, こ-",
+    "MeaningKo": "나무 목",
+    "MeaningEn": "tree, wood",
+    "Level": 5,
+    "StrokeCount": 4,
+    "Radical": "木",
+    "Examples": [
+      { "Word": "木曜日", "Reading": "もくようび", "Meaning": "목요일" },
+      { "Word": "木造", "Reading": "もくぞう", "Meaning": "목조" },
+      { "Word": "大木", "Reading": "たいぼく", "Meaning": "큰 나무" }
+    ],
+    "Tags": ["N5", "자연"]
+  },
+  {
+    "Id": "n5-008",
+    "Kanji": "金",
+    "Onyomi": "キン, コン",
+    "Kunyomi": "かね, かな-",
+    "MeaningKo": "쇠 금, 돈",
+    "MeaningEn": "gold, money, metal",
+    "Level": 5,
+    "StrokeCount": 8,
+    "Radical": "金",
+    "Examples": [
+      { "Word": "金曜日", "Reading": "きんようび", "Meaning": "금요일" },
+      { "Word": "お金", "Reading": "おかね", "Meaning": "돈" },
+      { "Word": "料金", "Reading": "りょうきん", "Meaning": "요금" }
+    ],
+    "Tags": ["N5", "경제", "시간"]
+  },
+  {
+    "Id": "n5-009",
+    "Kanji": "土",
+    "Onyomi": "ド, ト",
+    "Kunyomi": "つち",
+    "MeaningKo": "흙 토",
+    "MeaningEn": "earth, soil, ground",
+    "Level": 5,
+    "StrokeCount": 3,
+    "Radical": "土",
+    "Examples": [
+      { "Word": "土曜日", "Reading": "どようび", "Meaning": "토요일" },
+      { "Word": "土地", "Reading": "とち", "Meaning": "토지" },
+      { "Word": "お土産", "Reading": "おみやげ", "Meaning": "기념품, 선물" }
+    ],
+    "Tags": ["N5", "자연", "시간"]
+  },
+  {
+    "Id": "n5-010",
+    "Kanji": "学",
+    "Onyomi": "ガク",
+    "Kunyomi": "まな・ぶ",
+    "MeaningKo": "배울 학",
+    "MeaningEn": "study, learning, science",
+    "Level": 5,
+    "StrokeCount": 8,
+    "Radical": "子",
+    "Examples": [
+      { "Word": "学生", "Reading": "がくせい", "Meaning": "학생" },
+      { "Word": "学校", "Reading": "がっこう", "Meaning": "학교" },
+      { "Word": "大学", "Reading": "だいがく", "Meaning": "대학교" }
+    ],
+    "Tags": ["N5", "교육"]
+  },
+  {
+    "Id": "n5-011",
+    "Kanji": "生",
+    "Onyomi": "セイ, ショウ",
+    "Kunyomi": "い・きる, う・まれる, なま",
+    "MeaningKo": "날 생, 살다, 태어나다",
+    "MeaningEn": "life, genuine, birth",
+    "Level": 5,
+    "StrokeCount": 5,
+    "Radical": "生",
+    "Examples": [
+      { "Word": "先生", "Reading": "せんせい", "Meaning": "선생님" },
+      { "Word": "生活", "Reading": "せいかつ", "Meaning": "생활" },
+      { "Word": "生まれる", "Reading": "うまれる", "Meaning": "태어나다" }
+    ],
+    "Tags": ["N5", "삶", "교육"]
+  },
+  {
+    "Id": "n5-012",
+    "Kanji": "先",
+    "Onyomi": "セン",
+    "Kunyomi": "さき, ま・ず",
+    "MeaningKo": "먼저 선, 앞",
+    "MeaningEn": "before, ahead, previous",
+    "Level": 5,
+    "StrokeCount": 6,
+    "Radical": "儿",
+    "Examples": [
+      { "Word": "先週", "Reading": "せんしゅう", "Meaning": "지난주" },
+      { "Word": "先輩", "Reading": "せんぱい", "Meaning": "선배" },
+      { "Word": "先に", "Reading": "さきに", "Meaning": "먼저" }
+    ],
+    "Tags": ["N5", "시간", "관계"]
+  },
+  {
+    "Id": "n4-001",
+    "Kanji": "強",
+    "Onyomi": "キョウ, ゴウ",
+    "Kunyomi": "つよ・い, つよ・まる, し・いる",
+    "MeaningKo": "강할 강",
+    "MeaningEn": "strong, force",
+    "Level": 4,
+    "StrokeCount": 11,
+    "Radical": "弓",
+    "Examples": [
+      { "Word": "勉強", "Reading": "べんきょう", "Meaning": "공부" },
+      { "Word": "強調", "Reading": "きょうちょう", "Meaning": "강조" },
+      { "Word": "強い", "Reading": "つよい", "Meaning": "강하다, 세다" }
+    ],
+    "Tags": ["N4", "학습", "상태"]
+  },
+  {
+    "Id": "n4-002",
+    "Kanji": "勉",
+    "Onyomi": "ベン",
+    "Kunyomi": "つと・める",
+    "MeaningKo": "힘쓸 면",
+    "MeaningEn": "exertion, endeavor",
+    "Level": 4,
+    "StrokeCount": 10,
+    "Radical": "力",
+    "Examples": [
+      { "Word": "勉強", "Reading": "べんきょう", "Meaning": "공부" },
+      { "Word": "勤勉", "Reading": "きんべん", "Meaning": "근면" }
+    ],
+    "Tags": ["N4", "학습"]
+  },
+  {
+    "Id": "n4-003",
+    "Kanji": "旅",
+    "Onyomi": "リョ",
+    "Kunyomi": "たび",
+    "MeaningKo": "나그네 려, 여행",
+    "MeaningEn": "trip, travel",
+    "Level": 4,
+    "StrokeCount": 10,
+    "Radical": "方",
+    "Examples": [
+      { "Word": "旅行", "Reading": "りょこう", "Meaning": "여행" },
+      { "Word": "旅館", "Reading": "りょかん", "Meaning": "여관, 료칸" },
+      { "Word": "一人旅", "Reading": "ひとりたび", "Meaning": "혼자 여행" }
+    ],
+    "Tags": ["N4", "여행", "활동"]
+  },
+  {
+    "Id": "n4-004",
+    "Kanji": "館",
+    "Onyomi": "カン",
+    "Kunyomi": "やかた",
+    "MeaningKo": "집 관, 큰 건물",
+    "MeaningEn": "building, mansion, hall",
+    "Level": 4,
+    "StrokeCount": 16,
+    "Radical": "食",
+    "Examples": [
+      { "Word": "図書館", "Reading": "としょかん", "Meaning": "도서관" },
+      { "Word": "映画館", "Reading": "えいがかん", "Meaning": "영화관" },
+      { "Word": "博物館", "Reading": "はくぶつかん", "Meaning": "박물관" }
+    ],
+    "Tags": ["N4", "장소", "시설"]
+  },
+  {
+    "Id": "n4-005",
+    "Kanji": "質",
+    "Onyomi": "シツ, シチ",
+    "Kunyomi": "たち, ただ・す",
+    "MeaningKo": "바탕 질, 질문",
+    "MeaningEn": "substance, quality, question",
+    "Level": 4,
+    "StrokeCount": 15,
+    "Radical": "貝",
+    "Examples": [
+      { "Word": "質問", "Reading": "しつもん", "Meaning": "질문" },
+      { "Word": "品質", "Reading": "ひんしつ", "Meaning": "품질" },
+      { "Word": "物質", "Reading": "ぶっしつ", "Meaning": "물질" }
+    ],
+    "Tags": ["N4", "학습", "개념"]
+  },
+  {
+    "Id": "n4-006",
+    "Kanji": "問",
+    "Onyomi": "モン",
+    "Kunyomi": "と・う, と・い",
+    "MeaningKo": "물을 문, 문제",
+    "MeaningEn": "question, ask, problem",
+    "Level": 4,
+    "StrokeCount": 11,
+    "Radical": "口",
+    "Examples": [
+      { "Word": "問題", "Reading": "もんだい", "Meaning": "문제" },
+      { "Word": "訪問", "Reading": "ほうもん", "Meaning": "방문" },
+      { "Word": "問い", "Reading": "とい", "Meaning": "물음" }
+    ],
+    "Tags": ["N4", "학습", "의문"]
+  },
+  {
+    "Id": "n4-007",
+    "Kanji": "題",
+    "Onyomi": "ダイ",
+    "Kunyomi": "",
+    "MeaningKo": "제목 제, 주제",
+    "MeaningEn": "topic, subject, problem",
+    "Level": 4,
+    "StrokeCount": 18,
+    "Radical": "頁",
+    "Examples": [
+      { "Word": "宿題", "Reading": "しゅくだい", "Meaning": "숙제" },
+      { "Word": "話題", "Reading": "わだい", "Meaning": "화제" },
+      { "Word": "議題", "Reading": "ぎだい", "Meaning": "의제" }
+    ],
+    "Tags": ["N4", "학습", "대화"]
+  },
+  {
+    "Id": "n4-008",
+    "Kanji": "験",
+    "Onyomi": "ケン, ゲン",
+    "Kunyomi": "ため・す",
+    "MeaningKo": "시험 험, 경험",
+    "MeaningEn": "verification, effect, testing",
+    "Level": 4,
+    "StrokeCount": 18,
+    "Radical": "馬",
+    "Examples": [
+      { "Word": "試験", "Reading": "しけん", "Meaning": "시험" },
+      { "Word": "経験", "Reading": "けいけん", "Meaning": "경험" },
+      { "Word": "実験", "Reading": "じっけん", "Meaning": "실험" }
+    ],
+    "Tags": ["N4", "학습", "경험"]
+  },
+  {
+    "Id": "n3-001",
+    "Kanji": "政",
+    "Onyomi": "セイ, ショウ",
+    "Kunyomi": "まつりごと",
+    "MeaningKo": "정사 정, 정치",
+    "MeaningEn": "politics, government",
+    "Level": 3,
+    "StrokeCount": 9,
+    "Radical": "攴",
+    "Examples": [
+      { "Word": "政治", "Reading": "せいじ", "Meaning": "정치" },
+      { "Word": "政府", "Reading": "せいふ", "Meaning": "정부" },
+      { "Word": "行政", "Reading": "ぎょうせい", "Meaning": "행정" }
+    ],
+    "Tags": ["N3", "사회", "정치"]
+  },
+  {
+    "Id": "n3-002",
+    "Kanji": "治",
+    "Onyomi": "ジ, チ",
+    "Kunyomi": "おさ・める, なお・る, なお・す",
+    "MeaningKo": "다스릴 치, 치료",
+    "MeaningEn": "reign, cure, heal, rule",
+    "Level": 3,
+    "StrokeCount": 8,
+    "Radical": "水",
+    "Examples": [
+      { "Word": "治療", "Reading": "ちりょう", "Meaning": "치료" },
+      { "Word": "自治", "Reading": "じち", "Meaning": "자치" },
+      { "Word": "治る", "Reading": "なおる", "Meaning": "(병이) 낫다" }
+    ],
+    "Tags": ["N3", "의료", "사회"]
+  },
+  {
+    "Id": "n3-003",
+    "Kanji": "経",
+    "Onyomi": "ケイ, キョウ",
+    "Kunyomi": "へ・る, た・つ",
+    "MeaningKo": "지날 경, 경영",
+    "MeaningEn": "sutra, pass through, expire",
+    "Level": 3,
+    "StrokeCount": 11,
+    "Radical": "糸",
+    "Examples": [
+      { "Word": "経済", "Reading": "けいざい", "Meaning": "경제" },
+      { "Word": "経営", "Reading": "けいえい", "Meaning": "경영" },
+      { "Word": "経験", "Reading": "けいけん", "Meaning": "경험" }
+    ],
+    "Tags": ["N3", "경제", "비즈니스"]
+  },
+  {
+    "Id": "n3-004",
+    "Kanji": "済",
+    "Onyomi": "サイ, ザイ",
+    "Kunyomi": "す・む, す・ます",
+    "MeaningKo": "건널 제, 끝날 제",
+    "MeaningEn": "settle, relieve, finish",
+    "Level": 3,
+    "StrokeCount": 11,
+    "Radical": "水",
+    "Examples": [
+      { "Word": "返済", "Reading": "へんさい", "Meaning": "변제, 상환" },
+      { "Word": "救済", "Reading": "きゅうさい", "Meaning": "구제" },
+      { "Word": "済む", "Reading": "すむ", "Meaning": "끝나다, 해결되다" }
+    ],
+    "Tags": ["N3", "경제", "일상"]
+  },
+  {
+    "Id": "n3-005",
+    "Kanji": "保",
+    "Onyomi": "ホ, ホウ",
+    "Kunyomi": "たも・つ",
+    "MeaningKo": "지킬 보, 보존",
+    "MeaningEn": "protect, guarantee, keep",
+    "Level": 3,
+    "StrokeCount": 9,
+    "Radical": "人",
+    "Examples": [
+      { "Word": "保険", "Reading": "ほけん", "Meaning": "보험" },
+      { "Word": "保存", "Reading": "ほぞん", "Meaning": "보존, 저장" },
+      { "Word": "保護", "Reading": "ほご", "Meaning": "보호" }
+    ],
+    "Tags": ["N3", "안전", "사회"]
+  },
+  {
+    "Id": "n3-006",
+    "Kanji": "険",
+    "Onyomi": "ケン",
+    "Kunyomi": "けわ・しい",
+    "MeaningKo": "험할 험, 위험",
+    "MeaningEn": "precipitous, steep, risk",
+    "Level": 3,
+    "StrokeCount": 11,
+    "Radical": "阜",
+    "Examples": [
+      { "Word": "危険", "Reading": "きけん", "Meaning": "위험" },
+      { "Word": "険しい", "Reading": "けわしい", "Meaning": "험하다, 가파르다" },
+      { "Word": "冒険", "Reading": "ぼうけん", "Meaning": "모험" }
+    ],
+    "Tags": ["N3", "안전", "상태"]
+  },
+  {
+    "Id": "n3-007",
+    "Kanji": "際",
+    "Onyomi": "サイ",
+    "Kunyomi": "きわ",
+    "MeaningKo": "즈음 제, 국제",
+    "MeaningEn": "occasion, edge, international",
+    "Level": 3,
+    "StrokeCount": 14,
+    "Radical": "阜",
+    "Examples": [
+      { "Word": "国際", "Reading": "こくさい", "Meaning": "국제" },
+      { "Word": "交際", "Reading": "こうさい", "Meaning": "교제" },
+      { "Word": "際立つ", "Reading": "きわだつ", "Meaning": "두드러지다" }
+    ],
+    "Tags": ["N3", "사회", "관계"]
+  },
+  {
+    "Id": "n2-001",
+    "Kanji": "構",
+    "Onyomi": "コウ",
+    "Kunyomi": "かま・える, かま・う",
+    "MeaningKo": "얽을 구, 구조",
+    "MeaningEn": "posture, construct, mind",
+    "Level": 2,
+    "StrokeCount": 14,
+    "Radical": "木",
+    "Examples": [
+      { "Word": "構造", "Reading": "こうぞう", "Meaning": "구조" },
+      { "Word": "構成", "Reading": "こうせい", "Meaning": "구성" },
+      { "Word": "構わない", "Reading": "かまわない", "Meaning": "상관없다" }
+    ],
+    "Tags": ["N2", "기술", "사고"]
+  },
+  {
+    "Id": "n2-002",
+    "Kanji": "造",
+    "Onyomi": "ゾウ",
+    "Kunyomi": "つく・る",
+    "MeaningKo": "지을 조, 제조",
+    "MeaningEn": "create, make, structure",
+    "Level": 2,
+    "StrokeCount": 10,
+    "Radical": "辵",
+    "Examples": [
+      { "Word": "製造", "Reading": "せいぞう", "Meaning": "제조" },
+      { "Word": "創造", "Reading": "そうぞう", "Meaning": "창조" },
+      { "Word": "改造", "Reading": "かいぞう", "Meaning": "개조" }
+    ],
+    "Tags": ["N2", "제조", "생산"]
+  },
+  {
+    "Id": "n2-003",
+    "Kanji": "識",
+    "Onyomi": "シキ",
+    "Kunyomi": "し・る, しる・す",
+    "MeaningKo": "알 식, 지식",
+    "MeaningEn": "discriminating, know, write",
+    "Level": 2,
+    "StrokeCount": 19,
+    "Radical": "言",
+    "Examples": [
+      { "Word": "意識", "Reading": "いしき", "Meaning": "의식" },
+      { "Word": "知識", "Reading": "ちしき", "Meaning": "지식" },
+      { "Word": "常識", "Reading": "じょうしき", "Meaning": "상식" }
+    ],
+    "Tags": ["N2", "인지", "학술"]
+  },
+  {
+    "Id": "n2-004",
+    "Kanji": "拡",
+    "Onyomi": "カク",
+    "Kunyomi": "ひろ・がる, ひろ・げる",
+    "MeaningKo": "넓힐 확, 확장",
+    "MeaningEn": "broaden, extend, expand",
+    "Level": 2,
+    "StrokeCount": 8,
+    "Radical": "手",
+    "Examples": [
+      { "Word": "拡大", "Reading": "かくだい", "Meaning": "확대" },
+      { "Word": "拡張", "Reading": "かくちょう", "Meaning": "확장" },
+      { "Word": "拡散", "Reading": "かくさん", "Meaning": "확산" }
+    ],
+    "Tags": ["N2", "변화", "발전"]
+  },
+  {
+    "Id": "n2-005",
+    "Kanji": "貿",
+    "Onyomi": "ボウ",
+    "Kunyomi": "",
+    "MeaningKo": "무역할 무",
+    "MeaningEn": "trade, exchange",
+    "Level": 2,
+    "StrokeCount": 12,
+    "Radical": "貝",
+    "Examples": [
+      { "Word": "貿易", "Reading": "ぼうえき", "Meaning": "무역" },
+      { "Word": "貿易港", "Reading": "ぼうえきこう", "Meaning": "무역항" }
+    ],
+    "Tags": ["N2", "경제", "글로벌"]
+  },
+  {
+    "Id": "n2-006",
+    "Kanji": "易",
+    "Onyomi": "エキ, イ",
+    "Kunyomi": "やさ・しい, やす・い",
+    "MeaningKo": "바꿀 역, 쉬울 이",
+    "MeaningEn": "easy, ready to, simple, change",
+    "Level": 2,
+    "StrokeCount": 8,
+    "Radical": "日",
+    "Examples": [
+      { "Word": "安易", "Reading": "あんい", "Meaning": "안이함" },
+      { "Word": "難易度", "Reading": "なんいど", "Meaning": "난이도" },
+      { "Word": "容易", "Reading": "ようい", "Meaning": "용이, 쉬움" }
+    ],
+    "Tags": ["N2", "특성", "난이도"]
+  },
+  {
+    "Id": "n1-001",
+    "Kanji": "憂",
+    "Onyomi": "ユウ",
+    "Kunyomi": "うれ・える, うれ・い, う・い",
+    "MeaningKo": "근심 우, 우려",
+    "MeaningEn": "grief, lament, be anxious",
+    "Level": 1,
+    "StrokeCount": 15,
+    "Radical": "心",
+    "Examples": [
+      { "Word": "憂慮", "Reading": "ゆうりょ", "Meaning": "우려, 걱정" },
+      { "Word": "憂鬱", "Reading": "ゆううつ", "Meaning": "우울" },
+      { "Word": "憂い", "Reading": "うれい", "Meaning": "근심, 걱정" }
+    ],
+    "Tags": ["N1", "감정", "고급"]
+  },
+  {
+    "Id": "n1-002",
+    "Kanji": "慮",
+    "Onyomi": "リョ",
+    "Kunyomi": "おもんぱか・る",
+    "MeaningKo": "생각할 려, 배려",
+    "MeaningEn": "prudence, thought, consider",
+    "Level": 1,
+    "StrokeCount": 15,
+    "Radical": "心",
+    "Examples": [
+      { "Word": "配慮", "Reading": "はいりょ", "Meaning": "배려" },
+      { "Word": "考慮", "Reading": "こうりょ", "Meaning": "고려" },
+      { "Word": "遠慮", "Reading": "えんりょ", "Meaning": "사양, 조심함" }
+    ],
+    "Tags": ["N1", "사고", "매너"]
+  },
+  {
+    "Id": "n1-003",
+    "Kanji": "曖",
+    "Onyomi": "アイ",
+    "Kunyomi": "くら・い",
+    "MeaningKo": "희미할 애, 모호할 애",
+    "MeaningEn": "dark, not clear, ambiguous",
+    "Level": 1,
+    "StrokeCount": 17,
+    "Radical": "日",
+    "Examples": [
+      { "Word": "曖昧", "Reading": "あいまい", "Meaning": "애매, 모호함" }
+    ],
+    "Tags": ["N1", "논리", "고급"]
+  },
+  {
+    "Id": "n1-004",
+    "Kanji": "昧",
+    "Onyomi": "マイ, バイ",
+    "Kunyomi": "くら・い, むさぼ・る",
+    "MeaningKo": "어두울 매",
+    "MeaningEn": "dark, foolish, obscure",
+    "Level": 1,
+    "StrokeCount": 9,
+    "Radical": "日",
+    "Examples": [
+      { "Word": "曖昧", "Reading": "あいまい", "Meaning": "애매" },
+      { "Word": "三昧", "Reading": "ざんまい", "Meaning": "삼매, 몰두" }
+    ],
+    "Tags": ["N1", "고급"]
+  },
+  {
+    "Id": "n1-005",
+    "Kanji": "弊",
+    "Onyomi": "ヘイ",
+    "Kunyomi": "",
+    "MeaningKo": "폐단 폐, 폐해",
+    "MeaningEn": "abuse, evil, vice, broken",
+    "Level": 1,
+    "StrokeCount": 15,
+    "Radical": "廾",
+    "Examples": [
+      { "Word": "弊害", "Reading": "へいがい", "Meaning": "폐해" },
+      { "Word": "弊社", "Reading": "へいしゃ", "Meaning": "당사, 저희 회사 (겸양)" },
+      { "Word": "語弊", "Reading": "ごへい", "Meaning": "어폐, 오해를 부르는 말" }
+    ],
+    "Tags": ["N1", "비즈니스", "고급"]
+  },
+  {
+    "Id": "n1-006",
+    "Kanji": "遵",
+    "Onyomi": "ジュン",
+    "Kunyomi": "",
+    "MeaningKo": "좇을 준, 준수",
+    "MeaningEn": "abide by, follow, obey",
+    "Level": 1,
+    "StrokeCount": 15,
+    "Radical": "辵",
+    "Examples": [
+      { "Word": "遵守", "Reading": "じゅんしゅ", "Meaning": "준수 (법규 등)" },
+      { "Word": "遵法", "Reading": "じゅんぽう", "Meaning": "준법" }
+    ],
+    "Tags": ["N1", "법률", "규칙"]
+  },
+  {
+    "Id": "n1-007",
+    "Kanji": "緻",
+    "Onyomi": "チ",
+    "Kunyomi": "",
+    "MeaningKo": "빽빽할 치, 치밀",
+    "MeaningEn": "fine, close, dense",
+    "Level": 1,
+    "StrokeCount": 15,
+    "Radical": "糸",
+    "Examples": [
+      { "Word": "緻密", "Reading": "ちみつ", "Meaning": "치밀함, 정밀함" },
+      { "Word": "精緻", "Reading": "せいち", "Meaning": "정치함, 정교함" }
+    ],
+    "Tags": ["N1", "특성", "고급"]
+  },
+  {
+    "Id": "n1-008",
+    "Kanji": "密",
+    "Onyomi": "ミツ",
+    "Kunyomi": "ひそ・か",
+    "MeaningKo": "빽빽할 밀, 비밀",
+    "MeaningEn": "secrecy, density, close",
+    "Level": 1,
+    "StrokeCount": 11,
+    "Radical": "宀",
+    "Examples": [
+      { "Word": "秘密", "Reading": "ひみつ", "Meaning": "비밀" },
+      { "Word": "密集", "Reading": "みっしゅう", "Meaning": "밀집" },
+      { "Word": "密か", "Reading": "ひそか", "Meaning": "은밀함" }
+    ],
+    "Tags": ["N1", "상태", "보안"]
+  }
+]
