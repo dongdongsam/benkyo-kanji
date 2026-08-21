@@ -10,6 +10,10 @@
 > **Adaptive Japanese Kanji & Vocabulary Spaced Repetition Learning Desktop App with Printable PDF Worksheets & OCR Photo Auto-Grading**  
 > Built with C# .NET 8, WPF, and Tailscale-inspired modern dark aesthetics.
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![.NET](https://img.shields.io/badge/.NET-8.0--windows-512bd4)](https://dotnet.microsoft.com/)
+[![JLPT Kanji](https://img.shields.io/badge/Kanji%20Database-1000%2B%20Entries-10b981)](#-data-sources--attribution)
+
 ---
 
 ### 🌟 Key Features
@@ -42,14 +46,30 @@
 - **Detailed Scoring Breakdown**: Real-time score calculation (`Correct`, `Partial`, `Incorrect`), visual color badges, and manual override capabilities.
 - **Instant SRS Synchronization**: One-click sync that updates your Ebbinghaus memory intervals and study logs directly from the graded photo.
 
-#### 4. 📖 JLPT N5~N1 Dictionary & Custom Vocabulary Library
-- Search Kanji, Onyomi, Kunyomi, Korean meanings, English meanings, and example words in real time.
+#### 4. 📖 Comprehensive 1,000+ Kanji Database & Custom Library
+- **1,000+ Jōyō & JLPT N5~N1 Kanji**: Pre-seeded with over a thousand standard Japanese characters, On/Kun readings, Korean definitions (훈음), English definitions, stroke counts, radicals, and example compounds.
+- Search Kanji, readings, and definitions in real time.
 - Create and manage custom Kanji and vocabulary cards.
 - Complete JSON export and import for seamless data backup and restoration.
 
 #### 5. 🎨 Tailscale-Inspired Adaptive GUI
 - Sleek dark theme using Tailscale's Charcoal (`#131217`), Slate (`#1e1d24`), Indigo (`#6366f1`), and Emerald (`#10b981`).
 - Responsive layouts that adapt smoothly to FHD, QHD, 4K, and window resizing.
+
+---
+
+### 📚 Data Sources & Attribution
+
+The Kanji & vocabulary database included in this project incorporates open-source linguistic data from the following verified resources:
+
+1. **KANJIDIC2 & JMdict Project**:
+   - Maintained by the **Electronic Dictionary Research and Development Group (EDRDG)** / Jim Breen.
+   - License: [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/).
+   - URL: [http://www.edrdg.org/wiki/index.php/KANJIDIC_Project](http://www.edrdg.org/wiki/index.php/KANJIDIC_Project)
+2. **Japanese Ministry of Education (MEXT) Jōyō Kanji List & JLPT Anki Shared Decks**:
+   - Official 2,136 Jōyō Kanji (常用漢字) stroke counts, radicals, and JLPT N5~N1 classification based on open Anki core decks (Japanese Core 2000/6000 & JLPT Kanji Master).
+3. **National Institute of Korean Language (국립국어원)**:
+   - Standard Sino-Korean readings (훈음, 訓音) and Korean definitions mapping.
 
 ---
 
@@ -79,7 +99,7 @@ cd benkyo-kanji
 # Build solution
 dotnet build
 
-# Run automated test suite (19 unit tests)
+# Run automated test suite (20 unit tests)
 dotnet test
 
 # Launch WPF application
@@ -93,6 +113,10 @@ dotnet run --project BenkyoKanji/BenkyoKanji.csproj
 
 > **에빙하우스 망각 곡선 기반 일본어 한자·어휘 학습 & 인쇄용 PDF 시험지 자동 채점 데스크톱 시스템**  
 > Tailscale 스타일의 모던 다크 UI와 고해상도 반응형 레이아웃을 제공하는 C# .NET 8 WPF 데스크톱 애플리케이션입니다.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![.NET](https://img.shields.io/badge/.NET-8.0--windows-512bd4)](https://dotnet.microsoft.com/)
+[![상용한자 데이터베이스](https://img.shields.io/badge/한자%20데이터셋-1000자%20이상-10b981)](#-데이터-출처-및-라이선스-표기)
 
 ---
 
@@ -126,8 +150,9 @@ dotnet run --project BenkyoKanji/BenkyoKanji.csproj
 - **문항별 상세 피드백 & 수동 수정**: 정답(초록), 부분 정답(노랑), 오답(빨강) 시각화 및 사용자 수정 기능.
 - **망각 곡선 즉시 동기화**: 채점 결과를 원클릭으로 사용자 SRS 학습 데이터에 반영(오답 시 복습 주기 자동 초기화).
 
-#### 4. 📖 JLPT N5~N1 한자·어휘 사전 & 커스텀 단어장
-- 한자, 음독, 훈독, 한국어 뜻, 영문 뜻, 파생 어휘 실시간 통합 검색.
+#### 4. 📖 1,000자 이상 상용한자·어휘 사전 & 커스텀 단어장
+- **1,000자 이상의 일본 상용한자 및 JLPT N5~N1 한자 데이터셋 기본 탑재**.
+- 한자, 음독, 훈독, 한국어 뜻(훈음), 영문 뜻, 파생 어휘 실시간 통합 검색.
 - 사용자 정의 커스텀 단어 등록 및 관리.
 - 표준 JSON 기반 전체 데이터 백업 및 복원 지원.
 
@@ -135,6 +160,21 @@ dotnet run --project BenkyoKanji/BenkyoKanji.csproj
 - Tailscale 딥 차콜(`#131217`), 슬레이트(`#1e1d24`), 인디고(`#6366f1`), 에메랄드(`#10b981`) 정제된 컬러 팔레트.
 - 라운드 카드 레이아웃, 상태 표시등 펄스, 세련된 사이드바 네비게이션.
 - FHD, QHD, 4K 및 창 크기 변경에 유연하게 대응하는 반응형 적응형 레이아웃.
+
+---
+
+### 📚 데이터 출처 및 라이선스 표기
+
+본 프로젝트에 탑재된 일본어 한자 및 어휘 데이터는 다음의 검증된 오픈소스 데이터베이스를 기반으로 구축되었습니다:
+
+1. **KANJIDIC2 & JMdict Project**:
+   - **Electronic Dictionary Research and Development Group (EDRDG)** / Jim Breen 제작 및 유지보수.
+   - 라이선스: [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/).
+   - 공식 웹사이트: [http://www.edrdg.org/wiki/index.php/KANJIDIC_Project](http://www.edrdg.org/wiki/index.php/KANJIDIC_Project)
+2. **일본 문부과학성(MEXT) 상용한자 목록 및 Anki JLPT 공유 덱**:
+   - 일본 상용한자 2,136자 획수, 부수 및 JLPT N5~N1 난이도 분류 (Anki Japanese Core 2000/6000 & JLPT Kanji Master Deck).
+3. **국립국어원 표준 한자음 및 한국어 훈음 매핑 데이터**:
+   - 각 한자의 대표 한국어 훈음(예: '날 일, 해', '사람 인', '배울 학') 및 한자어 뜻풀이.
 
 ---
 
@@ -152,7 +192,7 @@ dotnet run --project BenkyoKanji/BenkyoKanji.csproj
 benkyo-kanji/
 ├── BenkyoKanji/                  # 메인 WPF 애플리케이션
 │   ├── Converters/              # XAML 바인딩 변환기
-│   ├── Data/                    # JLPT N5~N1 기본 탑재 한자/어휘 데이터셋 (JSON)
+│   ├── Data/                    # JLPT N5~N1 1,000자 이상 한자/어휘 데이터셋 (JSON)
 │   ├── Models/                  # KanjiItem, StudyRecord, WorksheetConfig, GradingResult
 │   ├── Services/                # JsonStorage, SrsEngine, PdfWorksheet, AutoGrading
 │   ├── Styles/                  # TailscaleTheme.xaml, Icons.xaml
@@ -161,17 +201,19 @@ benkyo-kanji/
 │   ├── App.xaml / MainWindow.xaml
 │   └── BenkyoKanji.csproj
 ├── BenkyoKanji.Tests/           # 단위 테스트 프로젝트 (xUnit)
-│   └── UnitTest1.cs
+│   ├── UnitTest1.cs
+│   └── KanjiDatasetBuilder.cs
 ├── samples/                     # 샘플 출력 PDF 및 채점용 이미지
 │   ├── sample_kanji_quiz.pdf
 │   └── sample_completed_worksheet.png
+├── LICENSE                      # MIT License
 ├── Main_Prompots.txt            # 요구사항 원본
 ├── PROGRESS.md                  # 커밋별 진행 상황 및 맥락 기록
-└── README.md                    # 프로젝트 가이드 (Bilingual)
+└── README.md                    # 프로젝트 가이드 (Bilingual & Attribution)
 ```
 
 ---
 
-## 📝 커밋 규칙 (Commit Rules)
-- 모든 커밋은 `ADDED:`, `FEATURE:`, `FIXED:` 접두어를 사용하며 1줄 이내로 작성됩니다.
-- 모든 개발 맥락과 변경 내역은 `PROGRESS.md`에 지속적으로 기록됩니다.
+## 📄 라이선스 (License)
+본 소프트웨어는 [MIT License](LICENSE)에 따라 배포됩니다.  
+포함된 한자 데이터는 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 라이선스를 준수합니다.

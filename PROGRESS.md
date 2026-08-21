@@ -53,3 +53,12 @@ A Tailscale-aesthetic WPF desktop application for learning Japanese Kanji and Vo
 - **Context**:
   - Updated `README.md` to fully support English and Korean side-by-side.
   - Established 3-tier branching model: `main` (Production/Release), `test` (Testing/QA), `develop` (Active Development).
+
+### [Step 6] MIT License and 1,000+ Joyo Kanji Dataset with Attributions
+- **Date**: 2026-08-21
+- **Commit Message**: `ADDED: Add MIT license and 1000+ Joyo Kanji dataset with source attributions`
+- **Context**:
+  - Added MIT `LICENSE` file.
+  - Expanded `kanji_dataset.json` to comprehensive 1,000+ Joyo/JLPT N5~N1 database with Onyomi, Kunyomi, Korean hun-eums, English meanings, stroke counts, and compound words.
+  - Added `KanjiDatasetBuilder.cs` automated dataset builder and unit tests (20 passing tests).
+  - Documented open-source data attributions in `README.md` (KANJIDIC2/JMdict under CC BY-SA 4.0, MEXT Joyo Kanji, Anki Japanese Core Decks, National Institute of Korean Language).
