@@ -1,6 +1,7 @@
 using System.IO;
 using BenkyoKanji.Models;
 using BenkyoKanji.Services;
+using BenkyoKanji.ViewModels;
 using Xunit;
 
 namespace BenkyoKanji.Tests;
@@ -445,5 +446,52 @@ public class ValueConverterTests
         // String equality
         Assert.True((bool)conv.Convert("Dashboard", typeof(bool), "Dashboard", System.Globalization.CultureInfo.InvariantCulture)!);
         Assert.False((bool)conv.Convert("Dashboard", typeof(bool), "Study", System.Globalization.CultureInfo.InvariantCulture)!);
+    }
+}
+
+public class DictionaryViewModelTests
+{
+    private readonly string _testDir;
+    private readonly IJsonStorageService _storage;
+    private readonly IKanjiRepository _repo;
+    private readonly ISrsEngineService _srs;
+    private readonly DictionaryViewModel _vm;
+
+    public DictionaryViewModelTests()
+    {
+        _testDir = Path.Combine(Path.GetTempPath(), $"BenkyoTest_DictVM_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(_testDir);
+        _storage = new JsonStorageService(_testDir);
+        _repo = new KanjiRepository(_storage);
+        _srs = new SrsEngineService(_storage, _repo);
+        _vm = new DictionaryViewModel(_repo, _srs);
+    }
+
+    [Fact]
+    public async Task InitializeAndSelectKanji_UpdatesDetailsAndSrsRecord()
+    {
+        await _vm.InitializeAsync();
+        Assert.NotEmpty(_vm.FilteredItems);
+        Assert.NotNull(_vm.SelectedKanji);
+        Assert.Equal(_vm.FilteredItems[0].Id, _vm.SelectedKanji.Id);
+        Assert.NotNull(_vm.SelectedStudyRecord);
+
+        // Select second item
+        if (_vm.FilteredItems.Count > 1)
+        {
+            var second = _vm.FilteredItems[1];
+            _vm.SelectedKanji = second;
+            Assert.Equal(second.Id, _vm.SelectedKanji.Id);
+            Assert.Equal(second.Kanji, _vm.SelectedKanji.Kanji);
+            Assert.Equal(second.MeaningKo, _vm.SelectedKanji.MeaningKo);
+            Assert.NotNull(_vm.SelectedStudyRecord);
+            Assert.Equal(second.Id, _vm.SelectedStudyRecord.KanjiId);
+        }
+
+        // Filter and verify SelectedKanji is retained or updated to first matched
+        _vm.SearchQuery = "日";
+        Assert.NotEmpty(_vm.FilteredItems);
+        Assert.NotNull(_vm.SelectedKanji);
+        Assert.Contains("日", _vm.SelectedKanji.Kanji);
     }
 }
