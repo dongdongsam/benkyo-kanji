@@ -6,6 +6,12 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Product>Benkyo Kanji (勉強漢字)</Product>
+    <Description>Adaptive Japanese Kanji Spaced Repetition Learning &amp; PDF Worksheet OCR Auto-Grading App</Description>
+    <Authors>dongdongsam</Authors>
   </PropertyGroup>
 
   <ItemGroup>

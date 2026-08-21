@@ -2,6 +2,8 @@
 bin/
 obj/
 out/
+publish/
+release/
 [Bb]in/
 [Oo]bj/
 

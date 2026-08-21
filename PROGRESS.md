@@ -62,3 +62,12 @@ A Tailscale-aesthetic WPF desktop application for learning Japanese Kanji and Vo
   - Expanded `kanji_dataset.json` to comprehensive 1,000+ Joyo/JLPT N5~N1 database with Onyomi, Kunyomi, Korean hun-eums, English meanings, stroke counts, and compound words.
   - Added `KanjiDatasetBuilder.cs` automated dataset builder and unit tests (20 passing tests).
   - Documented open-source data attributions in `README.md` (KANJIDIC2/JMdict under CC BY-SA 4.0, MEXT Joyo Kanji, Anki Japanese Core Decks, National Institute of Korean Language).
+
+### [Step 7] v1.0.0 Release Build & GitHub Actions CI/CD
+- **Date**: 2026-08-21
+- **Commit Message**: `FEATURE: Configure v1.0.0 release package and GitHub automated release workflow`
+- **Context**:
+  - Configured assembly versioning (v1.0.0) in `BenkyoKanji.csproj`.
+  - Added GitHub Actions `.github/workflows/build-and-release.yml` for automated testing, compilation, and GitHub Release deployment.
+  - Published compiled Windows x64 binaries to `release/BenkyoKanji-v1.0.0-win-x64/`.
+  - Created and pushed Git release tag `v1.0.0`.
