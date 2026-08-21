@@ -12,7 +12,20 @@ public class BoolToVisibilityConverter : IValueConverter
 
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        bool b = value is bool flag && flag;
+        bool b;
+        if (value is bool flag)
+        {
+            b = flag;
+        }
+        else if (value is string s)
+        {
+            b = !string.IsNullOrWhiteSpace(s);
+        }
+        else
+        {
+            b = value != null;
+        }
+
         if (Invert) b = !b;
         return b ? Visibility.Visible : Visibility.Collapsed;
     }
@@ -21,6 +34,48 @@ public class BoolToVisibilityConverter : IValueConverter
     {
         bool isVis = value is Visibility v && v == Visibility.Visible;
         return Invert ? !isVis : isVis;
+    }
+}
+
+public class NullToVisibilityConverter : IValueConverter
+{
+    public bool Invert { get; set; }
+
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        bool hasValue = value != null;
+        if (value is string s)
+        {
+            hasValue = !string.IsNullOrWhiteSpace(s);
+        }
+
+        if (Invert) hasValue = !hasValue;
+        return hasValue ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => throw new NotImplementedException();
+}
+
+public class EqualityToBoolConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value == null && parameter == null) return true;
+        if (value == null || parameter == null) return false;
+        return string.Equals(value.ToString(), parameter.ToString(), StringComparison.OrdinalIgnoreCase);
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is bool b && b && parameter != null)
+        {
+            if (targetType.IsEnum && Enum.TryParse(targetType, parameter.ToString(), true, out var enumVal))
+            {
+                return enumVal;
+            }
+            return parameter;
+        }
+        return Binding.DoNothing;
     }
 }
 

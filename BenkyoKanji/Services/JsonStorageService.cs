@@ -75,6 +75,28 @@ public class JsonStorageService : IJsonStorageService
                 var items = JsonSerializer.Deserialize<List<KanjiItem>>(json, _jsonOptions);
                 if (items != null && items.Count > 0)
                 {
+                    // Check if existing library has old placeholder/untranslated data
+                    bool hasOldPlaceholders = items.Take(200).Any(k => !k.IsCustom && (k.MeaningKo.StartsWith("한자 (") || k.MeaningKo == "한자" || string.IsNullOrWhiteSpace(k.MeaningKo)));
+                    if (!hasOldPlaceholders)
+                    {
+                        return items;
+                    }
+
+                    // Upgrade with bundled dataset and merge user's custom kanji
+                    var bundled = await LoadBundledDatasetAsync();
+                    if (bundled.Count > 0)
+                    {
+                        var customItems = items.Where(k => k.IsCustom).ToList();
+                        foreach (var custom in customItems)
+                        {
+                            var idx = bundled.FindIndex(b => b.Id == custom.Id || b.Kanji == custom.Kanji);
+                            if (idx >= 0) bundled[idx] = custom;
+                            else bundled.Add(custom);
+                        }
+                        await SaveKanjiLibraryAsync(bundled);
+                        return bundled;
+                    }
+
                     return items;
                 }
             }

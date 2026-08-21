@@ -398,3 +398,52 @@ public class JsonStorageBackupTests
         Assert.Equal("꿈 몽", imported.MeaningKo);
     }
 }
+
+public class ValueConverterTests
+{
+    [Fact]
+    public void BoolToVisibilityConverter_HandlesObjectsAndBooleans()
+    {
+        var conv = new BenkyoKanji.Converters.BoolToVisibilityConverter();
+        var invConv = new BenkyoKanji.Converters.BoolToVisibilityConverter { Invert = true };
+
+        // Boolean tests
+        Assert.Equal(System.Windows.Visibility.Visible, conv.Convert(true, typeof(System.Windows.Visibility), null, System.Globalization.CultureInfo.InvariantCulture));
+        Assert.Equal(System.Windows.Visibility.Collapsed, conv.Convert(false, typeof(System.Windows.Visibility), null, System.Globalization.CultureInfo.InvariantCulture));
+        Assert.Equal(System.Windows.Visibility.Collapsed, invConv.Convert(true, typeof(System.Windows.Visibility), null, System.Globalization.CultureInfo.InvariantCulture));
+        Assert.Equal(System.Windows.Visibility.Visible, invConv.Convert(false, typeof(System.Windows.Visibility), null, System.Globalization.CultureInfo.InvariantCulture));
+
+        // Object tests (such as SelectedKanji)
+        var kanji = new KanjiItem { Kanji = "日" };
+        Assert.Equal(System.Windows.Visibility.Visible, conv.Convert(kanji, typeof(System.Windows.Visibility), null, System.Globalization.CultureInfo.InvariantCulture));
+        Assert.Equal(System.Windows.Visibility.Collapsed, invConv.Convert(kanji, typeof(System.Windows.Visibility), null, System.Globalization.CultureInfo.InvariantCulture));
+        Assert.Equal(System.Windows.Visibility.Collapsed, conv.Convert(null, typeof(System.Windows.Visibility), null, System.Globalization.CultureInfo.InvariantCulture));
+        Assert.Equal(System.Windows.Visibility.Visible, invConv.Convert(null, typeof(System.Windows.Visibility), null, System.Globalization.CultureInfo.InvariantCulture));
+    }
+
+    [Fact]
+    public void NullToVisibilityConverter_HandlesNulls()
+    {
+        var conv = new BenkyoKanji.Converters.NullToVisibilityConverter();
+        var invConv = new BenkyoKanji.Converters.NullToVisibilityConverter { Invert = true };
+
+        Assert.Equal(System.Windows.Visibility.Visible, conv.Convert(new object(), typeof(System.Windows.Visibility), null, System.Globalization.CultureInfo.InvariantCulture));
+        Assert.Equal(System.Windows.Visibility.Collapsed, conv.Convert(null, typeof(System.Windows.Visibility), null, System.Globalization.CultureInfo.InvariantCulture));
+        Assert.Equal(System.Windows.Visibility.Collapsed, invConv.Convert(new object(), typeof(System.Windows.Visibility), null, System.Globalization.CultureInfo.InvariantCulture));
+        Assert.Equal(System.Windows.Visibility.Visible, invConv.Convert(null, typeof(System.Windows.Visibility), null, System.Globalization.CultureInfo.InvariantCulture));
+    }
+
+    [Fact]
+    public void EqualityToBoolConverter_HandlesEnumsAndStrings()
+    {
+        var conv = new BenkyoKanji.Converters.EqualityToBoolConverter();
+
+        // Enum equality
+        Assert.True((bool)conv.Convert(JlptLevel.N5, typeof(bool), JlptLevel.N5, System.Globalization.CultureInfo.InvariantCulture)!);
+        Assert.False((bool)conv.Convert(JlptLevel.N5, typeof(bool), JlptLevel.N1, System.Globalization.CultureInfo.InvariantCulture)!);
+
+        // String equality
+        Assert.True((bool)conv.Convert("Dashboard", typeof(bool), "Dashboard", System.Globalization.CultureInfo.InvariantCulture)!);
+        Assert.False((bool)conv.Convert("Dashboard", typeof(bool), "Study", System.Globalization.CultureInfo.InvariantCulture)!);
+    }
+}

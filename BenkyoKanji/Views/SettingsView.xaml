@@ -8,6 +8,7 @@
              d:DesignHeight="700" d:DesignWidth="900">
     <UserControl.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolVisConv" />
+        <conv:EqualityToBoolConverter x:Key="EqualityConv" />
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -35,7 +36,7 @@
                             <Border Margin="0,0,6,0" Padding="12" CornerRadius="8" Background="{DynamicResource BgCardSecondaryBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
                                 <StackPanel>
                                     <RadioButton Content="🌙 다크 모드 (Tailscale Dark)" FontSize="13" FontWeight="Bold"
-                                                 IsChecked="{Binding Theme, Converter={StaticResource BoolVisConv}, ConverterParameter=Dark}"
+                                                 IsChecked="{Binding Theme, Converter={StaticResource EqualityConv}, ConverterParameter=Dark}"
                                                  Command="{Binding SetThemeCommand}" CommandParameter="Dark"/>
                                     <TextBlock Text="딥 차콜 &amp; 슬레이트 배경으로 눈의 피로를 덜어줍니다." FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="20,4,0,0"/>
                                 </StackPanel>
@@ -45,7 +46,7 @@
                             <Border Margin="6,0,0,0" Padding="12" CornerRadius="8" Background="{DynamicResource BgCardSecondaryBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
                                 <StackPanel>
                                     <RadioButton Content="☀️ 라이트 모드 (Tailscale Clean Light)" FontSize="13" FontWeight="Bold"
-                                                 IsChecked="{Binding Theme, Converter={StaticResource BoolVisConv}, ConverterParameter=Light}"
+                                                 IsChecked="{Binding Theme, Converter={StaticResource EqualityConv}, ConverterParameter=Light}"
                                                  Command="{Binding SetThemeCommand}" CommandParameter="Light"/>
                                     <TextBlock Text="순백색 카드 &amp; 고대비 텍스트로 밝은 곳에서 선명합니다." FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="20,4,0,0"/>
                                 </StackPanel>

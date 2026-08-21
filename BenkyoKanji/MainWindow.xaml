@@ -15,7 +15,9 @@
 
     <Window.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolVisConv" />
+        <conv:NullToVisibilityConverter x:Key="NullToVisConv" />
         <conv:NullOrEmptyToVisibilityConverter x:Key="NullOrEmptyConv" />
+        <conv:EqualityToBoolConverter x:Key="EqualityConv" />
 
         <!-- ViewModel to View mappings -->
         <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
@@ -72,7 +74,7 @@
 
                     <!-- Dashboard -->
                     <RadioButton Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="Dashboard"
-                                 IsChecked="{Binding ActiveSection, Converter={StaticResource BoolVisConv}, ConverterParameter=Dashboard}">
+                                 IsChecked="{Binding ActiveSection, Converter={StaticResource EqualityConv}, ConverterParameter=Dashboard}">
                         <StackPanel Orientation="Horizontal">
                             <Path Data="{StaticResource IconDashboard}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,10,0"/>
                             <TextBlock Text="대시보드" FontSize="13"/>
@@ -81,7 +83,7 @@
 
                     <!-- Study & Review -->
                     <RadioButton Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="Study"
-                                 IsChecked="{Binding ActiveSection, Converter={StaticResource BoolVisConv}, ConverterParameter=Study}">
+                                 IsChecked="{Binding ActiveSection, Converter={StaticResource EqualityConv}, ConverterParameter=Study}">
                         <StackPanel Orientation="Horizontal">
                             <Path Data="{StaticResource IconStudy}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,10,0"/>
                             <TextBlock Text="망각 곡선 복습" FontSize="13"/>
@@ -92,7 +94,7 @@
 
                     <!-- PDF Worksheet -->
                     <RadioButton Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="Worksheet"
-                                 IsChecked="{Binding ActiveSection, Converter={StaticResource BoolVisConv}, ConverterParameter=Worksheet}">
+                                 IsChecked="{Binding ActiveSection, Converter={StaticResource EqualityConv}, ConverterParameter=Worksheet}">
                         <StackPanel Orientation="Horizontal">
                             <Path Data="{StaticResource IconPdf}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,10,0"/>
                             <TextBlock Text="PDF 시험지 생성" FontSize="13"/>
@@ -101,7 +103,7 @@
 
                     <!-- Auto-Grading Scanner -->
                     <RadioButton Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="Grading"
-                                 IsChecked="{Binding ActiveSection, Converter={StaticResource BoolVisConv}, ConverterParameter=Grading}">
+                                 IsChecked="{Binding ActiveSection, Converter={StaticResource EqualityConv}, ConverterParameter=Grading}">
                         <StackPanel Orientation="Horizontal">
                             <Path Data="{StaticResource IconGrading}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,10,0"/>
                             <TextBlock Text="사진 자동 채점" FontSize="13"/>
@@ -112,7 +114,7 @@
 
                     <!-- Kanji Dictionary -->
                     <RadioButton Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="Dictionary"
-                                 IsChecked="{Binding ActiveSection, Converter={StaticResource BoolVisConv}, ConverterParameter=Dictionary}">
+                                 IsChecked="{Binding ActiveSection, Converter={StaticResource EqualityConv}, ConverterParameter=Dictionary}">
                         <StackPanel Orientation="Horizontal">
                             <Path Data="{StaticResource IconDictionary}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,10,0"/>
                             <TextBlock Text="한자·어휘 사전" FontSize="13"/>
@@ -121,7 +123,7 @@
 
                     <!-- Settings -->
                     <RadioButton Style="{StaticResource NavButton}" Command="{Binding NavigateCommand}" CommandParameter="Settings"
-                                 IsChecked="{Binding ActiveSection, Converter={StaticResource BoolVisConv}, ConverterParameter=Settings}">
+                                 IsChecked="{Binding ActiveSection, Converter={StaticResource EqualityConv}, ConverterParameter=Settings}">
                         <StackPanel Orientation="Horizontal">
                             <Path Data="{StaticResource IconSettings}" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,10,0"/>
                             <TextBlock Text="환경 설정" FontSize="13"/>

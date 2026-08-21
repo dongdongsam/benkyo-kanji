@@ -10,6 +10,7 @@
     <UserControl.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolVisConv" />
         <conv:BoolToVisibilityConverter x:Key="InvertBoolVisConv" Invert="True" />
+        <conv:EqualityToBoolConverter x:Key="EqualityConv" />
         <conv:JlptLevelToColorConverter x:Key="LevelColorConv" />
     </UserControl.Resources>
 
@@ -28,23 +29,21 @@
 
             <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="종이 출력용 PDF 시험지·학습표 생성기" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                <TextBlock Text="단어(한자)·음독/훈독·한국어 뜻 빈칸 퀴즈를 A4 규격으로 생성하여 인쇄 및 채점할 수 있습니다." FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+                <TextBlock Text="망각 곡선 취약 한자 또는 JLPT 급수별 맞춤형 인쇄 시험지 PDF 즉시 생성" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0"/>
             </StackPanel>
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                <Button Style="{StaticResource PrimaryButton}" Command="{Binding ExportPdfCommand}" Padding="18,10">
-                    <StackPanel Orientation="Horizontal">
-                        <Path Data="{StaticResource IconPrint}" Fill="White" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
-                        <TextBlock Text="PDF 저장 및 인쇄" FontWeight="Bold"/>
-                    </StackPanel>
-                </Button>
-            </StackPanel>
+            <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Command="{Binding ExportPdfCommand}" Padding="16,9">
+                <StackPanel Orientation="Horizontal">
+                    <Path Data="{StaticResource IconPdf}" Fill="White" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
+                    <TextBlock Text="PDF 저장 및 인쇄" FontSize="13" FontWeight="SemiBold"/>
+                </StackPanel>
+            </Button>
         </Grid>
 
-        <!-- 2-Column Main Workspace -->
+        <!-- Main Content -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="340"/>
+                <ColumnDefinition Width="380"/>
                 <ColumnDefinition Width="16"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
@@ -58,7 +57,7 @@
                             <TextBlock Text="1. 시험지 형식 선택" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10"/>
 
                             <!-- Type 1: Kanji Quiz -->
-                            <RadioButton Style="{StaticResource NavButton}" IsChecked="{Binding SelectedType, Converter={StaticResource BoolVisConv}, ConverterParameter={x:Static models:WorksheetType.KanjiQuiz}}"
+                            <RadioButton Style="{StaticResource NavButton}" IsChecked="{Binding SelectedType, Converter={StaticResource EqualityConv}, ConverterParameter={x:Static models:WorksheetType.KanjiQuiz}}"
                                          Command="{Binding QuickPresetKanjiQuizCommand}">
                                 <StackPanel>
                                     <TextBlock Text="한자 쓰기 테스트 (한자 빈칸)" FontSize="12.5" FontWeight="SemiBold"/>
@@ -67,7 +66,7 @@
                             </RadioButton>
 
                             <!-- Type 2: Reading Quiz -->
-                            <RadioButton Style="{StaticResource NavButton}" IsChecked="{Binding SelectedType, Converter={StaticResource BoolVisConv}, ConverterParameter={x:Static models:WorksheetType.ReadingQuiz}}"
+                            <RadioButton Style="{StaticResource NavButton}" IsChecked="{Binding SelectedType, Converter={StaticResource EqualityConv}, ConverterParameter={x:Static models:WorksheetType.ReadingQuiz}}"
                                          Command="{Binding QuickPresetReadingQuizCommand}">
                                 <StackPanel>
                                     <TextBlock Text="음독·훈독 읽기 테스트 (읽기 빈칸)" FontSize="12.5" FontWeight="SemiBold"/>
@@ -76,7 +75,7 @@
                             </RadioButton>
 
                             <!-- Type 3: Meaning Quiz -->
-                            <RadioButton Style="{StaticResource NavButton}" IsChecked="{Binding SelectedType, Converter={StaticResource BoolVisConv}, ConverterParameter={x:Static models:WorksheetType.MeaningQuiz}}"
+                            <RadioButton Style="{StaticResource NavButton}" IsChecked="{Binding SelectedType, Converter={StaticResource EqualityConv}, ConverterParameter={x:Static models:WorksheetType.MeaningQuiz}}"
                                          Command="{Binding QuickPresetMeaningQuizCommand}">
                                 <StackPanel>
                                     <TextBlock Text="한국어 뜻 테스트 (뜻 빈칸)" FontSize="12.5" FontWeight="SemiBold"/>
@@ -85,7 +84,7 @@
                             </RadioButton>
 
                             <!-- Type 4: Full Reference Table -->
-                            <RadioButton Style="{StaticResource NavButton}" IsChecked="{Binding SelectedType, Converter={StaticResource BoolVisConv}, ConverterParameter={x:Static models:WorksheetType.FullStudyTable}}"
+                            <RadioButton Style="{StaticResource NavButton}" IsChecked="{Binding SelectedType, Converter={StaticResource EqualityConv}, ConverterParameter={x:Static models:WorksheetType.FullStudyTable}}"
                                          Command="{Binding QuickPresetStudyTableCommand}">
                                 <StackPanel>
                                     <TextBlock Text="전체 학습 정리표 (전체 표시)" FontSize="12.5" FontWeight="SemiBold"/>
