@@ -60,35 +60,7 @@ public class KanjiRepository : IKanjiRepository
 
     public IReadOnlyList<KanjiItem> Search(string query, JlptLevel level = JlptLevel.All, string? tag = null)
     {
-        var result = _items.AsEnumerable();
-
-        if (level != JlptLevel.All)
-        {
-            result = result.Where(k => k.Level == level);
-        }
-
-        if (!string.IsNullOrWhiteSpace(tag))
-        {
-            result = result.Where(k => k.Tags.Any(t => t.Equals(tag, StringComparison.OrdinalIgnoreCase)));
-        }
-
-        if (!string.IsNullOrWhiteSpace(query))
-        {
-            var q = query.Trim().ToLowerInvariant();
-            result = result.Where(k =>
-                k.Kanji.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                k.Onyomi.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                k.Kunyomi.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                k.MeaningKo.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                k.MeaningEn.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                k.Examples.Any(e => 
-                    e.Word.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                    e.Reading.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                    e.Meaning.Contains(q, StringComparison.OrdinalIgnoreCase))
-            );
-        }
-
-        return result.ToList();
+        return _items.Where(k => KanjiSearchHelper.Matches(k, query, level, tag)).ToList();
     }
 
     public IReadOnlyList<KanjiItem> GetByLevel(JlptLevel level)

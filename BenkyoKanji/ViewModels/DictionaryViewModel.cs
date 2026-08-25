@@ -5,6 +5,91 @@ using BenkyoKanji.Services;
 
 namespace BenkyoKanji.ViewModels;
 
+public enum StudyStatusFilter
+{
+    All = 0,
+    Unstudied = 1,  // 0 times
+    Learning = 2,   // 1~2 times
+    Mastered = 3    // 3+ times
+}
+
+public enum KanjiSortOption
+{
+    Default = 0,        // JLPT 급수순
+    StudyCountAsc = 1,  // 누적 횟수 적은순
+    StudyCountDesc = 2, // 누적 횟수 많은순
+    StrokeCount = 3,    // 획수순
+    KoreanName = 4      // 한국어 훈음순
+}
+
+public class KanjiListItemViewModel : ViewModelBase
+{
+    private readonly Func<string, Task> _incrementAction;
+    private readonly Func<string, Task> _decrementAction;
+    private StudyRecord _record;
+
+    public KanjiItem Kanji { get; }
+
+    public StudyRecord Record
+    {
+        get => _record;
+        set
+        {
+            if (SetProperty(ref _record, value))
+            {
+                OnPropertyChanged(nameof(CumulativeStudyCount));
+                OnPropertyChanged(nameof(Status));
+                OnPropertyChanged(nameof(StatusDisplay));
+                OnPropertyChanged(nameof(StudyCountDisplay));
+                OnPropertyChanged(nameof(IsStudied));
+            }
+        }
+    }
+
+    public int CumulativeStudyCount => Record.EffectiveStudyCount;
+
+    public StudyStatus Status => Record.Status;
+
+    public string StatusDisplay => Status switch
+    {
+        StudyStatus.Mastered => "숙달",
+        StudyStatus.Reviewing => "복습 중",
+        StudyStatus.Learning => "학습 중",
+        _ => "미학습"
+    };
+
+    public string StudyCountDisplay => CumulativeStudyCount == 0 ? "미학습 (0회)" : $"누적 {CumulativeStudyCount}회";
+
+    public bool IsStudied => CumulativeStudyCount > 0;
+
+    public IRelayCommand IncrementCountCommand { get; }
+    public IRelayCommand DecrementCountCommand { get; }
+
+    public KanjiListItemViewModel(
+        KanjiItem kanji, 
+        StudyRecord record, 
+        Func<string, Task> incrementAction, 
+        Func<string, Task> decrementAction)
+    {
+        Kanji = kanji;
+        _record = record;
+        _incrementAction = incrementAction;
+        _decrementAction = decrementAction;
+
+        IncrementCountCommand = new AsyncRelayCommand(async () => await _incrementAction(Kanji.Id));
+        DecrementCountCommand = new AsyncRelayCommand(async () => await _decrementAction(Kanji.Id));
+    }
+
+    public void NotifyRecordUpdated()
+    {
+        OnPropertyChanged(nameof(CumulativeStudyCount));
+        OnPropertyChanged(nameof(Status));
+        OnPropertyChanged(nameof(StatusDisplay));
+        OnPropertyChanged(nameof(StudyCountDisplay));
+        OnPropertyChanged(nameof(IsStudied));
+    }
+}
+
 public class DictionaryViewModel : ViewModelBase
 {
     private readonly IKanjiRepository _kanjiRepo;
@@ -12,6 +97,9 @@ public class DictionaryViewModel : ViewModelBase
 
     private string _searchQuery = string.Empty;
     private JlptLevel _selectedLevel = JlptLevel.All;
+    private StudyStatusFilter _selectedStudyFilter = StudyStatusFilter.All;
+    private KanjiSortOption _selectedSortOption = KanjiSortOption.Default;
+    private KanjiListItemViewModel? _selectedItem;
     private KanjiItem? _selectedKanji;
     private StudyRecord? _selectedStudyRecord;
     private bool _isAddingCustom;
@@ -53,6 +141,51 @@ public class DictionaryViewModel : ViewModelBase
         }
     }
 
+    public StudyStatusFilter SelectedStudyFilter
+    {
+        get => _selectedStudyFilter;
+        set
+        {
+            if (SetProperty(ref _selectedStudyFilter, value))
+            {
+                FilterItems();
+            }
+        }
+    }
+
+    public KanjiSortOption SelectedSortOption
+    {
+        get => _selectedSortOption;
+        set
+        {
+            if (SetProperty(ref _selectedSortOption, value))
+            {
+                FilterItems();
+            }
+        }
+    }
+
+    public KanjiListItemViewModel? SelectedItem
+    {
+        get => _selectedItem;
+        set
+        {
+            if (SetProperty(ref _selectedItem, value))
+            {
+                if (value != null)
+                {
+                    SelectedKanji = value.Kanji;
+                    SelectedStudyRecord = value.Record;
+                }
+                else
+                {
+                    SelectedKanji = null;
+                    SelectedStudyRecord = null;
+                }
+            }
+        }
+    }
+
     public KanjiItem? SelectedKanji
     {
         get => _selectedKanji;
@@ -68,10 +201,6 @@ public class DictionaryViewModel : ViewModelBase
                 {
                     SelectedStudyRecord = null;
                 }
-            }
-            else if (value != null && (SelectedStudyRecord == null || SelectedStudyRecord.KanjiId != value.Id))
-            {
-                SelectedStudyRecord = _srsService.GetOrCreateRecord(value.Id);
             }
         }
     }
@@ -154,11 +283,15 @@ public class DictionaryViewModel : ViewModelBase
         set => SetProperty(ref _newExampleMeaning, value);
     }
 
-    public ObservableCollection<KanjiItem> FilteredItems { get; } = [];
+    public ObservableCollection<KanjiListItemViewModel> FilteredItems { get; } = [];
 
     public IRelayCommand SearchCommand { get; }
+    public IRelayCommand ClearSearchCommand { get; }
     public IRelayCommand<JlptLevel> SelectLevelFilterCommand { get; }
-    public IRelayCommand<KanjiItem> SelectKanjiCommand { get; }
+    public IRelayCommand<StudyStatusFilter> SelectStudyStatusFilterCommand { get; }
+    public IRelayCommand<KanjiListItemViewModel> SelectKanjiCommand { get; }
+    public IRelayCommand<string> ManualIncrementStudyCountCommand { get; }
+    public IRelayCommand<string> ManualDecrementStudyCountCommand { get; }
     public IRelayCommand ToggleAddCustomCommand { get; }
     public IRelayCommand SaveCustomKanjiCommand { get; }
     public IRelayCommand<string> DeleteKanjiCommand { get; }
@@ -169,14 +302,18 @@ public class DictionaryViewModel : ViewModelBase
         _srsService = srsService;
 
         SearchCommand = new RelayCommand(FilterItems);
+        ClearSearchCommand = new RelayCommand(() => SearchQuery = string.Empty);
         SelectLevelFilterCommand = new RelayCommand<JlptLevel>(level => SelectedLevel = level);
-        SelectKanjiCommand = new RelayCommand<KanjiItem>(item =>
+        SelectStudyStatusFilterCommand = new RelayCommand<StudyStatusFilter>(filter => SelectedStudyFilter = filter);
+        SelectKanjiCommand = new RelayCommand<KanjiListItemViewModel>(item =>
         {
             if (item != null)
             {
-                SelectedKanji = item;
+                SelectedItem = item;
             }
         });
+        ManualIncrementStudyCountCommand = new AsyncRelayCommand<string>(IncrementStudyCountAsync);
+        ManualDecrementStudyCountCommand = new AsyncRelayCommand<string>(DecrementStudyCountAsync);
         ToggleAddCustomCommand = new RelayCommand(() => IsAddingCustom = !IsAddingCustom);
         SaveCustomKanjiCommand = new AsyncRelayCommand(SaveCustomKanjiAsync);
         DeleteKanjiCommand = new AsyncRelayCommand<string>(DeleteKanjiAsync);
@@ -193,7 +330,15 @@ public class DictionaryViewModel : ViewModelBase
     {
         if (item != null)
         {
-            SelectedKanji = item;
+            var match = FilteredItems.FirstOrDefault(i => i.Kanji.Id == item.Id);
+            if (match != null)
+            {
+                SelectedItem = match;
+            }
+            else
+            {
+                SelectedKanji = item;
+            }
         }
     }
 
@@ -209,28 +354,103 @@ public class DictionaryViewModel : ViewModelBase
         }
     }
 
-    private void FilterItems()
+    public void FilterItems()
     {
         RunOnUi(() =>
         {
-            var prevId = SelectedKanji?.Id;
+            var prevId = SelectedKanji?.Id ?? SelectedItem?.Kanji.Id;
             var results = _kanjiRepo.Search(SearchQuery, SelectedLevel);
+
+            // Filter by Study Status
+            var records = _srsService.GetAllRecords();
+            var list = new List<KanjiListItemViewModel>();
+
+            foreach (var kanji in results)
+            {
+                var rec = records.TryGetValue(kanji.Id, out var existingRec) 
+                    ? existingRec 
+                    : _srsService.GetOrCreateRecord(kanji.Id);
+
+                int studyCount = rec.EffectiveStudyCount;
+
+                bool matchesStudyFilter = SelectedStudyFilter switch
+                {
+                    StudyStatusFilter.Unstudied => studyCount == 0,
+                    StudyStatusFilter.Learning => studyCount >= 1 && studyCount <= 2,
+                    StudyStatusFilter.Mastered => studyCount >= 3,
+                    _ => true
+                };
+
+                if (matchesStudyFilter)
+                {
+                    list.Add(new KanjiListItemViewModel(kanji, rec, IncrementStudyCountAsync, DecrementStudyCountAsync));
+                }
+            }
+
+            // Sorting
+            IEnumerable<KanjiListItemViewModel> sorted = SelectedSortOption switch
+            {
+                KanjiSortOption.StudyCountAsc => list.OrderBy(x => x.CumulativeStudyCount).ThenBy(x => x.Kanji.Level),
+                KanjiSortOption.StudyCountDesc => list.OrderByDescending(x => x.CumulativeStudyCount).ThenBy(x => x.Kanji.Level),
+                KanjiSortOption.StrokeCount => list.OrderBy(x => x.Kanji.StrokeCount).ThenBy(x => x.Kanji.Level),
+                KanjiSortOption.KoreanName => list.OrderBy(x => x.Kanji.MeaningKo),
+                _ => list.OrderBy(x => x.Kanji.Level).ThenBy(x => x.Kanji.StrokeCount)
+            };
+
             FilteredItems.Clear();
-            foreach (var item in results)
+            foreach (var item in sorted)
             {
                 FilteredItems.Add(item);
             }
 
             if (FilteredItems.Count > 0)
             {
-                var match = FilteredItems.FirstOrDefault(k => k.Id == prevId);
-                SelectedKanji = match ?? FilteredItems[0];
+                var match = FilteredItems.FirstOrDefault(k => k.Kanji.Id == prevId);
+                SelectedItem = match ?? FilteredItems[0];
             }
             else
             {
+                SelectedItem = null;
                 SelectedKanji = null;
+                SelectedStudyRecord = null;
             }
         });
+    }
+
+    public async Task IncrementStudyCountAsync(string? kanjiId)
+    {
+        if (string.IsNullOrWhiteSpace(kanjiId)) return;
+
+        var updated = await _srsService.IncrementStudyCountAsync(kanjiId);
+        var targetItem = FilteredItems.FirstOrDefault(i => i.Kanji.Id == kanjiId);
+        if (targetItem != null)
+        {
+            targetItem.Record = updated;
+            targetItem.NotifyRecordUpdated();
+            if (SelectedItem?.Kanji.Id == kanjiId)
+            {
+                SelectedStudyRecord = updated;
+            }
+            StatusMessage = $"'{targetItem.Kanji.Kanji}' 누적 학습 횟수: {updated.EffectiveStudyCount}회";
+        }
+    }
+
+    public async Task DecrementStudyCountAsync(string? kanjiId)
+    {
+        if (string.IsNullOrWhiteSpace(kanjiId)) return;
+
+        var updated = await _srsService.DecrementStudyCountAsync(kanjiId);
+        var targetItem = FilteredItems.FirstOrDefault(i => i.Kanji.Id == kanjiId);
+        if (targetItem != null)
+        {
+            targetItem.Record = updated;
+            targetItem.NotifyRecordUpdated();
+            if (SelectedItem?.Kanji.Id == kanjiId)
+            {
+                SelectedStudyRecord = updated;
+            }
+            StatusMessage = $"'{targetItem.Kanji.Kanji}' 학습 횟수가 차감되었습니다. (누적: {updated.EffectiveStudyCount}회)";
+        }
     }
 
     private async Task SaveCustomKanjiAsync()
@@ -269,7 +489,7 @@ public class DictionaryViewModel : ViewModelBase
         ClearNewForm();
 
         FilterItems();
-        SelectedKanji = customItem;
+        SelectItem(customItem);
         StatusMessage = $"'{customItem.Kanji}' 단어가 사전에 추가되었습니다.";
     }
 
@@ -293,7 +513,7 @@ public class DictionaryViewModel : ViewModelBase
 
         await _kanjiRepo.DeleteAsync(id);
         FilterItems();
-        SelectedKanji = FilteredItems.FirstOrDefault();
+        SelectedItem = FilteredItems.FirstOrDefault();
         StatusMessage = "한자가 삭제되었습니다.";
     }
 }

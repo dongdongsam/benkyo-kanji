@@ -7,6 +7,9 @@ public interface ISrsEngineService
     Task InitializeAsync();
     StudyRecord GetOrCreateRecord(string kanjiId);
     Task<StudyRecord> ProcessReviewAsync(string kanjiId, ReviewRating rating, ReviewSource source, double timeTakenSeconds = 0);
+    Task<StudyRecord> IncrementStudyCountAsync(string kanjiId, ReviewRating rating = ReviewRating.Good);
+    Task<StudyRecord> DecrementStudyCountAsync(string kanjiId);
+    Task<StudyRecord> SetStudyCountAsync(string kanjiId, int count);
     IReadOnlyList<KanjiItem> GetDueReviewItems();
     IReadOnlyList<KanjiItem> GetNewLearningItems(int? count = null);
     Task<UserProfile> GetUserProfileAsync();
@@ -41,6 +44,10 @@ public class SrsEngineService : ISrsEngineService
         _records.Clear();
         foreach (var kvp in records)
         {
+            if (kvp.Value.CumulativeStudyCount == 0 && (kvp.Value.History.Count > 0 || kvp.Value.Repetitions > 0))
+            {
+                kvp.Value.CumulativeStudyCount = Math.Max(kvp.Value.Repetitions, kvp.Value.History.Count);
+            }
             _records[kvp.Key] = kvp.Value;
         }
 
@@ -59,6 +66,7 @@ public class SrsEngineService : ISrsEngineService
             {
                 KanjiId = kanjiId,
                 Repetitions = 0,
+                CumulativeStudyCount = 0,
                 IntervalDays = 0,
                 EaseFactor = 2.5,
                 NextReviewDate = DateTime.UtcNow,
@@ -68,6 +76,106 @@ public class SrsEngineService : ISrsEngineService
             _records[kanjiId] = record;
         }
 
+        return record;
+    }
+
+    public async Task<StudyRecord> IncrementStudyCountAsync(string kanjiId, ReviewRating rating = ReviewRating.Good)
+    {
+        var record = GetOrCreateRecord(kanjiId);
+        var now = DateTime.UtcNow;
+
+        record.CumulativeStudyCount++;
+        record.LastReviewedDate = now;
+        record.History.Add(new ReviewLogEntry
+        {
+            ReviewedAt = now,
+            Rating = rating,
+            Source = ReviewSource.ManualUpdate,
+            TimeTakenSeconds = 0,
+            Note = "수동 학습 체크"
+        });
+
+        if (record.Status == StudyStatus.New)
+        {
+            record.Status = StudyStatus.Learning;
+            record.Repetitions = 1;
+            record.IntervalDays = 1.0;
+            record.NextReviewDate = now.AddDays(1);
+        }
+        else
+        {
+            record.Repetitions++;
+            if (record.Repetitions >= 5 && record.IntervalDays >= 21)
+            {
+                record.Status = StudyStatus.Mastered;
+            }
+            else if (record.Repetitions >= 2)
+            {
+                record.Status = StudyStatus.Reviewing;
+            }
+            else
+            {
+                record.Status = StudyStatus.Learning;
+            }
+        }
+
+        UpdateStudyStreak();
+        await _storageService.SaveStudyRecordsAsync(_records);
+        await _storageService.SaveUserProfileAsync(_profile);
+        return record;
+    }
+
+    public async Task<StudyRecord> DecrementStudyCountAsync(string kanjiId)
+    {
+        var record = GetOrCreateRecord(kanjiId);
+        if (record.CumulativeStudyCount > 0)
+        {
+            record.CumulativeStudyCount--;
+        }
+
+        if (record.History.Count > 0)
+        {
+            record.History.RemoveAt(record.History.Count - 1);
+        }
+
+        if (record.Repetitions > 0)
+        {
+            record.Repetitions--;
+        }
+
+        if (record.CumulativeStudyCount == 0)
+        {
+            record.Status = StudyStatus.New;
+            record.Repetitions = 0;
+            record.IntervalDays = 0;
+            record.Lapses = 0;
+        }
+
+        await _storageService.SaveStudyRecordsAsync(_records);
+        return record;
+    }
+
+    public async Task<StudyRecord> SetStudyCountAsync(string kanjiId, int count)
+    {
+        var record = GetOrCreateRecord(kanjiId);
+        int target = Math.Max(0, count);
+        record.CumulativeStudyCount = target;
+
+        if (target == 0)
+        {
+            record.Status = StudyStatus.New;
+            record.Repetitions = 0;
+            record.IntervalDays = 0;
+        }
+        else if (record.Status == StudyStatus.New)
+        {
+            record.Status = StudyStatus.Learning;
+            record.Repetitions = target;
+            record.IntervalDays = 1.0;
+            record.NextReviewDate = DateTime.UtcNow.AddDays(1);
+        }
+
+        await _storageService.SaveStudyRecordsAsync(_records);
         return record;
     }
 
@@ -85,6 +193,7 @@ public class SrsEngineService : ISrsEngineService
         };
         record.History.Add(log);
         record.LastReviewedDate = now;
+        record.CumulativeStudyCount = record.EffectiveStudyCount + 1;
 
         int score = (int)rating; // 1 to 5
 

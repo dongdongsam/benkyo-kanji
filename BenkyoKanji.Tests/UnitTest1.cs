@@ -90,6 +90,59 @@ public class SrsEngineTests
 
         Assert.Equal(7, forecast.Count);
     }
+
+    [Fact]
+    public async Task IncrementStudyCount_IncrementsCumulativeCountAndSetsStatus()
+    {
+        await _srs.InitializeAsync();
+        var record1 = await _srs.IncrementStudyCountAsync("test-manual-1");
+
+        Assert.Equal(1, record1.CumulativeStudyCount);
+        Assert.Equal(1, record1.Repetitions);
+        Assert.Equal(StudyStatus.Learning, record1.Status);
+        Assert.Single(record1.History);
+        Assert.Equal(ReviewSource.ManualUpdate, record1.History[0].Source);
+
+        var record2 = await _srs.IncrementStudyCountAsync("test-manual-1");
+        Assert.Equal(2, record2.CumulativeStudyCount);
+        Assert.Equal(2, record2.Repetitions);
+        Assert.Equal(StudyStatus.Reviewing, record2.Status);
+        Assert.Equal(2, record2.History.Count);
+    }
+
+    [Fact]
+    public async Task DecrementStudyCount_ReducesCountAndPreservesFloor()
+    {
+        await _srs.InitializeAsync();
+        await _srs.IncrementStudyCountAsync("test-dec-1");
+        await _srs.IncrementStudyCountAsync("test-dec-1");
+
+        var rec = await _srs.DecrementStudyCountAsync("test-dec-1");
+        Assert.Equal(1, rec.CumulativeStudyCount);
+        Assert.Equal(1, rec.Repetitions);
+
+        var recZero = await _srs.DecrementStudyCountAsync("test-dec-1");
+        Assert.Equal(0, recZero.CumulativeStudyCount);
+        Assert.Equal(0, recZero.Repetitions);
+        Assert.Equal(StudyStatus.New, recZero.Status);
+
+        // Decrement below zero stays at 0
+        var recUnder = await _srs.DecrementStudyCountAsync("test-dec-1");
+        Assert.Equal(0, recUnder.CumulativeStudyCount);
+    }
+
+    [Fact]
+    public async Task SetStudyCount_SetsExactCount()
+    {
+        await _srs.InitializeAsync();
+        var rec = await _srs.SetStudyCountAsync("test-set-1", 5);
+        Assert.Equal(5, rec.CumulativeStudyCount);
+        Assert.Equal(StudyStatus.Learning, rec.Status);
+
+        var recReset = await _srs.SetStudyCountAsync("test-set-1", 0);
+        Assert.Equal(0, recReset.CumulativeStudyCount);
+        Assert.Equal(StudyStatus.New, recReset.Status);
+    }
 }
 
 public class KanjiRepositoryTests
@@ -155,6 +208,53 @@ public class KanjiRepositoryTests
         await _repo.DeleteAsync("custom-test-01");
         var deleted = _repo.GetById("custom-test-01");
         Assert.Null(deleted);
+    }
+}
+
+public class KanjiSearchHelperTests
+{
+    [Fact]
+    public void DecomposeKoreanChosung_DecomposesHangulProperly()
+    {
+        Assert.Equal("ㄴ ㅇ", KanjiSearchHelper.DecomposeKoreanChosung("날 일"));
+        Assert.Equal("ㄴㅇ", KanjiSearchHelper.DecomposeKoreanChosung("날 일", true));
+        Assert.Equal("ㅂㅇㅎ", KanjiSearchHelper.DecomposeKoreanChosung("배울 학", true));
+        Assert.Equal("ㅁㅅ", KanjiSearchHelper.DecomposeKoreanChosung("물 수", true));
+        Assert.Equal("ㄱㅇㅇ ㅁ", KanjiSearchHelper.DecomposeKoreanChosung("고양이 묘"));
+    }
+
+    [Fact]
+    public void Matches_ChosungSearch_FindsMatches()
+    {
+        var kanji1 = new KanjiItem { Kanji = "学", MeaningKo = "배울 학", Level = JlptLevel.N5 };
+        var kanji2 = new KanjiItem { Kanji = "日", MeaningKo = "날 일", Level = JlptLevel.N5 };
+
+        Assert.True(KanjiSearchHelper.Matches(kanji1, "ㅂㅇㅎ"));
+        Assert.True(KanjiSearchHelper.Matches(kanji1, "ㅂㅇ"));
+        Assert.False(KanjiSearchHelper.Matches(kanji1, "ㄴㅇ"));
+
+        Assert.True(KanjiSearchHelper.Matches(kanji2, "ㄴㅇ"));
+        Assert.True(KanjiSearchHelper.Matches(kanji2, "ㄴ"));
+    }
+
+    [Fact]
+    public void Matches_HiraganaKatakanaCrossSearch_FindsMatches()
+    {
+        var kanji = new KanjiItem
+        {
+            Kanji = "日",
+            Onyomi = "ニチ, ジツ",
+            Kunyomi = "ひ, -び",
+            MeaningKo = "날 일",
+            Level = JlptLevel.N5
+        };
+
+        // Search with Hiragana should match Katakana Onyomi
+        Assert.True(KanjiSearchHelper.Matches(kanji, "にち"));
+        Assert.True(KanjiSearchHelper.Matches(kanji, "じつ"));
+
+        // Search with Katakana should match Hiragana Kunyomi
+        Assert.True(KanjiSearchHelper.Matches(kanji, "ヒ"));
     }
 }
 
@@ -329,6 +429,48 @@ public class PdfWorksheetTests
         Assert.False(config.Items[0].HideReading);
         Assert.False(config.Items[0].HideMeaning);
         Assert.Equal("木", config.Items[0].ExpectedAnswer);
+    }
+
+    [Fact]
+    public void CreateWorksheetConfig_StudyCountFilter_FiltersAppropriately()
+    {
+        var sampleItems = new List<KanjiItem>
+        {
+            new() { Id = "k-01", Kanji = "日", MeaningKo = "날 일", Level = JlptLevel.N5 },
+            new() { Id = "k-02", Kanji = "月", MeaningKo = "달 월", Level = JlptLevel.N5 },
+            new() { Id = "k-03", Kanji = "火", MeaningKo = "불 화", Level = JlptLevel.N5 },
+            new() { Id = "k-04", Kanji = "水", MeaningKo = "물 수", Level = JlptLevel.N5 }
+        };
+
+        var records = new Dictionary<string, StudyRecord>
+        {
+            ["k-01"] = new() { KanjiId = "k-01", CumulativeStudyCount = 0 }, // 0
+            ["k-02"] = new() { KanjiId = "k-02", CumulativeStudyCount = 2 }, // 2
+            ["k-03"] = new() { KanjiId = "k-03", CumulativeStudyCount = 5 }, // 5
+            ["k-04"] = new() { KanjiId = "k-04", CumulativeStudyCount = 1 }  // 1
+        };
+
+        // 1. Filter: Unstudied only (0 times) -> should get k-01
+        var configUnstudied = _pdfService.CreateWorksheetConfig(
+            WorksheetType.KanjiQuiz, JlptLevel.N5, 10, sampleItems, "미학습 시험지",
+            records, StudyCountFilterType.UnstudiedOnly);
+        Assert.Single(configUnstudied.Items);
+        Assert.Equal("k-01", configUnstudied.Items[0].KanjiItem.Id);
+
+        // 2. Filter: LessThan 3 -> should get k-01 (0), k-04 (1), k-02 (2) -> 3 items
+        var configLess = _pdfService.CreateWorksheetConfig(
+            WorksheetType.KanjiQuiz, JlptLevel.N5, 10, sampleItems, "3회 미만 시험지",
+            records, StudyCountFilterType.LessThan, 3);
+        Assert.Equal(3, configLess.Items.Count);
+        Assert.DoesNotContain(configLess.Items, i => i.KanjiItem.Id == "k-03");
+
+        // 3. Filter: AtLeast 2 -> should get k-02 (2) and k-03 (5) -> 2 items
+        var configAtLeast = _pdfService.CreateWorksheetConfig(
+            WorksheetType.KanjiQuiz, JlptLevel.N5, 10, sampleItems, "2회 이상 시험지",
+            records, StudyCountFilterType.AtLeast, 2);
+        Assert.Equal(2, configAtLeast.Items.Count);
+        Assert.Contains(configAtLeast.Items, i => i.KanjiItem.Id == "k-02");
+        Assert.Contains(configAtLeast.Items, i => i.KanjiItem.Id == "k-03");
     }
 }
 
@@ -515,19 +657,19 @@ public class DictionaryViewModelTests
         await _vm.InitializeAsync();
         Assert.NotEmpty(_vm.FilteredItems);
         Assert.NotNull(_vm.SelectedKanji);
-        Assert.Equal(_vm.FilteredItems[0].Id, _vm.SelectedKanji.Id);
+        Assert.Equal(_vm.FilteredItems[0].Kanji.Id, _vm.SelectedKanji.Id);
         Assert.NotNull(_vm.SelectedStudyRecord);
 
         // Select second item
         if (_vm.FilteredItems.Count > 1)
         {
             var second = _vm.FilteredItems[1];
-            _vm.SelectedKanji = second;
-            Assert.Equal(second.Id, _vm.SelectedKanji.Id);
-            Assert.Equal(second.Kanji, _vm.SelectedKanji.Kanji);
-            Assert.Equal(second.MeaningKo, _vm.SelectedKanji.MeaningKo);
+            _vm.SelectedItem = second;
+            Assert.Equal(second.Kanji.Id, _vm.SelectedKanji.Id);
+            Assert.Equal(second.Kanji.Kanji, _vm.SelectedKanji.Kanji);
+            Assert.Equal(second.Kanji.MeaningKo, _vm.SelectedKanji.MeaningKo);
             Assert.NotNull(_vm.SelectedStudyRecord);
-            Assert.Equal(second.Id, _vm.SelectedStudyRecord.KanjiId);
+            Assert.Equal(second.Kanji.Id, _vm.SelectedStudyRecord.KanjiId);
         }
 
         // Filter and verify SelectedKanji is retained or updated to first matched
@@ -536,14 +678,120 @@ public class DictionaryViewModelTests
         Assert.NotNull(_vm.SelectedKanji);
         Assert.Contains("日", _vm.SelectedKanji.Kanji);
 
+        // Test ClearSearchCommand
+        _vm.ClearSearchCommand.Execute(null);
+        Assert.Equal(string.Empty, _vm.SearchQuery);
+
         // Test SelectKanjiCommand
         if (_vm.FilteredItems.Count > 0)
         {
             var target = _vm.FilteredItems[0];
             _vm.SelectKanjiCommand.Execute(target);
-            Assert.Equal(target.Id, _vm.SelectedKanji.Id);
+            Assert.Equal(target.Kanji.Id, _vm.SelectedKanji.Id);
             Assert.NotNull(_vm.SelectedStudyRecord);
-            Assert.Equal(target.Id, _vm.SelectedStudyRecord.KanjiId);
+            Assert.Equal(target.Kanji.Id, _vm.SelectedStudyRecord.KanjiId);
+        }
+    }
+
+    [Fact]
+    public async Task ManualStudyCountIncrementAndDecrement_UpdatesViewModel()
+    {
+        await _vm.InitializeAsync();
+        Assert.NotEmpty(_vm.FilteredItems);
+
+        var first = _vm.FilteredItems[0];
+        string kanjiId = first.Kanji.Id;
+
+        // Increment count via ViewModel
+        await _vm.IncrementStudyCountAsync(kanjiId);
+        Assert.True(first.CumulativeStudyCount >= 1);
+        Assert.True(first.IsStudied);
+
+        // Decrement count
+        await _vm.DecrementStudyCountAsync(kanjiId);
+        Assert.Equal(0, first.CumulativeStudyCount);
+        Assert.False(first.IsStudied);
+    }
+
+    [Fact]
+    public async Task StudyStatusFilter_FiltersListAccurately()
+    {
+        await _vm.InitializeAsync();
+        var first = _vm.FilteredItems[0];
+
+        // Increment 3 times -> Mastered
+        await _vm.IncrementStudyCountAsync(first.Kanji.Id);
+        await _vm.IncrementStudyCountAsync(first.Kanji.Id);
+        await _vm.IncrementStudyCountAsync(first.Kanji.Id);
+
+        // Filter: Mastered (3+ times)
+        _vm.SelectedStudyFilter = StudyStatusFilter.Mastered;
+        Assert.NotEmpty(_vm.FilteredItems);
+        Assert.Contains(_vm.FilteredItems, i => i.Kanji.Id == first.Kanji.Id);
+
+        // Filter: Unstudied (0 times)
+        _vm.SelectedStudyFilter = StudyStatusFilter.Unstudied;
+        Assert.DoesNotContain(_vm.FilteredItems, i => i.Kanji.Id == first.Kanji.Id);
+    }
+}
+
+public class WorksheetViewModelTests
+{
+    private readonly string _testDir;
+    private readonly IJsonStorageService _storage;
+    private readonly IKanjiRepository _repo;
+    private readonly ISrsEngineService _srs;
+    private readonly IPdfWorksheetService _pdf;
+    private readonly WorksheetViewModel _vm;
+
+    public WorksheetViewModelTests()
+    {
+        _testDir = Path.Combine(Path.GetTempPath(), $"BenkyoTest_WsVM_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(_testDir);
+        _storage = new JsonStorageService(_testDir);
+        _repo = new KanjiRepository(_storage);
+        _srs = new SrsEngineService(_storage, _repo);
+        _pdf = new PdfWorksheetService();
+        _vm = new WorksheetViewModel(_pdf, _repo, _srs, _storage);
+    }
+
+    [Fact]
+    public async Task MarkCurrentWorksheetAsStudied_IncrementsAllItemsStudyCount()
+    {
+        await _vm.InitializeAsync();
+        Assert.NotEmpty(_vm.PreviewItems);
+
+        var firstId = _vm.PreviewItems[0].KanjiItem.Id;
+        var initialRec = _srs.GetOrCreateRecord(firstId);
+        int initialCount = initialRec.EffectiveStudyCount;
+
+        // Mark current worksheet as studied
+        await _vm.MarkCurrentWorksheetAsStudiedAsync();
+
+        var updatedRec = _srs.GetOrCreateRecord(firstId);
+        Assert.Equal(initialCount + 1, updatedRec.EffectiveStudyCount);
+    }
+
+    [Fact]
+    public async Task GenerateNextSet_ExcludesPreviousWords()
+    {
+        await _vm.InitializeAsync();
+        _vm.QuestionCount = 5;
+        _vm.GeneratePreview(useExclusion: false);
+
+        var firstSetIds = _vm.PreviewItems.Select(i => i.KanjiItem.Id).ToHashSet();
+        Assert.NotEmpty(firstSetIds);
+
+        // Generate next set
+        _vm.GenerateNextSet();
+        Assert.True(_vm.ExcludedCount >= 5);
+
+        var secondSetIds = _vm.PreviewItems.Select(i => i.KanjiItem.Id).ToList();
+
+        // Second set should not contain words from first set
+        foreach (var id in secondSetIds)
+        {
+            Assert.DoesNotContain(id, firstSetIds);
         }
     }
 }

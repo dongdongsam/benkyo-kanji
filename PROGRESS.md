@@ -81,3 +81,14 @@ A Tailscale-aesthetic WPF desktop application for learning Japanese Kanji and Vo
   - Converted all views and UI components to `{DynamicResource}` bindings for consistent font contrast across light/dark modes.
   - Added quick sidebar theme switcher and Settings View theme selector.
   - Updated compiled release package in `release/BenkyoKanji-v1.0.0-win-x64/`.
+
+### [Step 9] v1.1.0 Release: Cumulative Study Tracking, Multi-Set PDF Generator & Advanced Kanji Search
+- **Date**: 2026-08-25
+- **Commit Message**: `FEATURE: Implement cumulative study tracking, multi-set continuous PDF generation, and advanced kanji dictionary search (v1.1.0)`
+- **Context**:
+  - **Manual Study Tracking & OMR Sync**: Added `CumulativeStudyCount` in `StudyRecord`, manual study count increment/decrement (+1 / -1 buttons) in Dictionary View, and automatic study count sync from OMR worksheet grading scans.
+  - **PDF Cumulative Filter & Multi-Set Continuous Generation**: Added PDF filtering by cumulative study count (Unstudied Only, Less Than N, At Least N), one-click button to batch-mark current worksheet items as studied (+1), and continuous "Fill with other words (Next Set)" button to easily generate Set A, Set B, Set C without duplicates.
+  - **Advanced Kanji Search**: Implemented `KanjiSearchHelper` with Korean Chosung decomposition (`ㅂㅇㅎ` -> `배울 학`), Japanese Hiragana/Katakana cross-search (`にち` -> `ニチ`), English meanings, stroke counts, and example compounds. Added search clear button, study status filter, and multi-field sorting in Dictionary View.
+  - **Testing**: Added 19 comprehensive unit tests (total 38 passing xUnit tests).
+  - **Release**: Published v1.1.0 Windows x64 release package and updated GitHub Actions workflow.
+

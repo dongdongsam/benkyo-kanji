@@ -21,6 +21,9 @@ public class WorksheetViewModel : ViewModelBase
     private bool _includeExamples = true;
     private bool _includeStrokeCount = true;
     private bool _onlyDueItems = false;
+    private StudyCountFilterType _selectedStudyFilter = StudyCountFilterType.All;
+    private int _studyFilterThreshold = 3;
+    private int _matchingCandidatesCount = 0;
     private string _sheetTitle = "JLPT 일본어 한자 학습 시험지";
     private string? _lastGeneratedPdfPath;
 
@@ -84,6 +87,36 @@ public class WorksheetViewModel : ViewModelBase
         }
     }
 
+    public StudyCountFilterType SelectedStudyFilter
+    {
+        get => _selectedStudyFilter;
+        set
+        {
+            if (SetProperty(ref _selectedStudyFilter, value))
+            {
+                GeneratePreview();
+            }
+        }
+    }
+
+    public int StudyFilterThreshold
+    {
+        get => _studyFilterThreshold;
+        set
+        {
+            if (SetProperty(ref _studyFilterThreshold, value))
+            {
+                GeneratePreview();
+            }
+        }
+    }
+
+    public int MatchingCandidatesCount
+    {
+        get => _matchingCandidatesCount;
+        set => SetProperty(ref _matchingCandidatesCount, value);
+    }
+
     public string SheetTitle
     {
         get => _sheetTitle;
@@ -96,11 +129,18 @@ public class WorksheetViewModel : ViewModelBase
         set => SetProperty(ref _lastGeneratedPdfPath, value);
     }
 
+    private readonly HashSet<string> _excludedKanjiIds = [];
+
+    public int ExcludedCount => _excludedKanjiIds.Count;
+
     public WorksheetConfig? CurrentConfig { get; private set; }
     public ObservableCollection<WorksheetItem> PreviewItems { get; } = [];
     public ObservableCollection<WorksheetConfig> WorksheetHistory { get; } = [];
 
     public IRelayCommand RefreshPreviewCommand { get; }
+    public IRelayCommand MarkCurrentWorksheetAsStudiedCommand { get; }
+    public IRelayCommand GenerateNextSetCommand { get; }
+    public IRelayCommand ResetExcludedHistoryCommand { get; }
     public IRelayCommand ExportPdfCommand { get; }
     public IRelayCommand OpenPdfCommand { get; }
     public IRelayCommand QuickPresetStudyTableCommand { get; }
@@ -119,7 +159,10 @@ public class WorksheetViewModel : ViewModelBase
         _srsService = srsService;
         _storageService = storageService;
 
-        RefreshPreviewCommand = new RelayCommand(GeneratePreview);
+        RefreshPreviewCommand = new RelayCommand(() => GeneratePreview(useExclusion: false));
+        MarkCurrentWorksheetAsStudiedCommand = new AsyncRelayCommand(MarkCurrentWorksheetAsStudiedAsync);
+        GenerateNextSetCommand = new RelayCommand(GenerateNextSet);
+        ResetExcludedHistoryCommand = new RelayCommand(ResetExcludedHistory);
         ExportPdfCommand = new AsyncRelayCommand(ExportPdfAsync);
         OpenPdfCommand = new RelayCommand(OpenGeneratedPdf);
 
@@ -155,10 +198,62 @@ public class WorksheetViewModel : ViewModelBase
             }
         });
 
-        GeneratePreview();
+        GeneratePreview(useExclusion: false);
     }
 
-    public void GeneratePreview()
+    public void GenerateNextSet()
+    {
+        if (CurrentConfig != null && CurrentConfig.Items.Count > 0)
+        {
+            foreach (var item in CurrentConfig.Items)
+            {
+                _excludedKanjiIds.Add(item.KanjiItem.Id);
+            }
+        }
+
+        OnPropertyChanged(nameof(ExcludedCount));
+        GeneratePreview(useExclusion: true);
+    }
+
+    public void ResetExcludedHistory()
+    {
+        _excludedKanjiIds.Clear();
+        OnPropertyChanged(nameof(ExcludedCount));
+        GeneratePreview(useExclusion: false);
+        StatusMessage = "출제 제외 기록이 초기화되었습니다.";
+    }
+
+    public async Task MarkCurrentWorksheetAsStudiedAsync()
+    {
+        if (CurrentConfig == null || CurrentConfig.Items.Count == 0) return;
+
+        IsBusy = true;
+        try
+        {
+            int count = 0;
+            foreach (var item in CurrentConfig.Items)
+            {
+                if (!string.IsNullOrWhiteSpace(item.KanjiItem.Id))
+                {
+                    await _srsService.IncrementStudyCountAsync(item.KanjiItem.Id);
+                    count++;
+                }
+            }
+
+            StatusMessage = $"✓ 현재 시험지에 출제된 {count}개 한자가 누적 학습에 1회씩 반영되었습니다!";
+            GeneratePreview(useExclusion: false);
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"누적 반영 실패: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    public void GeneratePreview(bool useExclusion = false)
     {
         IReadOnlyList<KanjiItem> candidates;
         if (OnlyDueItems)
@@ -171,12 +266,57 @@ public class WorksheetViewModel : ViewModelBase
             candidates = _kanjiRepo.GetAll();
         }
 
+        var allRecords = _srsService.GetAllRecords();
+
+        // Calculate matching candidates count
+        var filteredCandidates = SelectedLevel == JlptLevel.All
+            ? candidates.ToList()
+            : candidates.Where(k => k.Level == SelectedLevel).ToList();
+
+        if (SelectedStudyFilter != StudyCountFilterType.All)
+        {
+            filteredCandidates = filteredCandidates.Where(k =>
+            {
+                int count = allRecords.TryGetValue(k.Id, out var rec) ? rec.EffectiveStudyCount : 0;
+                return SelectedStudyFilter switch
+                {
+                    StudyCountFilterType.UnstudiedOnly => count == 0,
+                    StudyCountFilterType.LessThan => count < StudyFilterThreshold,
+                    StudyCountFilterType.AtLeast => count >= StudyFilterThreshold,
+                    _ => true
+                };
+            }).ToList();
+        }
+
+        // If next set is requested, exclude previously picked words
+        if (useExclusion && _excludedKanjiIds.Count > 0)
+        {
+            var freshCandidates = filteredCandidates.Where(k => !_excludedKanjiIds.Contains(k.Id)).ToList();
+            if (freshCandidates.Count > 0)
+            {
+                filteredCandidates = freshCandidates;
+                StatusMessage = $"이전 시험지 출제 단어({_excludedKanjiIds.Count}개)를 제외하고 새로운 단어로 출제했습니다.";
+            }
+            else
+            {
+                // All candidates exhausted, reset exclusions
+                _excludedKanjiIds.Clear();
+                OnPropertyChanged(nameof(ExcludedCount));
+                StatusMessage = "모든 일치 한자가 한 번씩 출제되어 다음 순환 출제를 시작합니다.";
+            }
+        }
+
+        MatchingCandidatesCount = filteredCandidates.Count;
+
         CurrentConfig = _pdfService.CreateWorksheetConfig(
             SelectedType, 
             SelectedLevel, 
             QuestionCount, 
-            candidates, 
-            SheetTitle);
+            filteredCandidates, 
+            SheetTitle,
+            allRecords,
+            SelectedStudyFilter,
+            StudyFilterThreshold);
 
         CurrentConfig.IncludeExamples = IncludeExamples;
         CurrentConfig.IncludeStrokeCount = IncludeStrokeCount;

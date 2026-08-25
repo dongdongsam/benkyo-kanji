@@ -32,12 +32,33 @@
                 <TextBlock Text="망각 곡선 취약 한자 또는 JLPT 급수별 맞춤형 인쇄 시험지 PDF 즉시 생성" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0"/>
             </StackPanel>
 
-            <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Command="{Binding ExportPdfCommand}" Padding="16,9">
-                <StackPanel Orientation="Horizontal">
-                    <Path Data="{StaticResource IconPdf}" Fill="White" Width="14" Height="14" Stretch="Uniform" Margin="0,0,8,0"/>
-                    <TextBlock Text="PDF 저장 및 인쇄" FontSize="13" FontWeight="SemiBold"/>
-                </StackPanel>
-            </Button>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <!-- Button 1: Mark as studied -->
+                <Button Style="{StaticResource SuccessButton}" Command="{Binding MarkCurrentWorksheetAsStudiedCommand}" Padding="13,8" Margin="0,0,8,0"
+                        ToolTip="현재 시험지에 출제된 모든 한자의 누적 학습 횟수를 1회씩 증가시킵니다.">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Data="{StaticResource IconCheck}" Fill="White" Width="13" Height="13" Stretch="Uniform" Margin="0,0,6,0"/>
+                        <TextBlock Text="출제 한자 누적에 산입 (+1)" FontSize="12" FontWeight="Bold"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Button 2: Fill with other words (Next Set) -->
+                <Button Style="{StaticResource SecondaryButton}" Command="{Binding GenerateNextSetCommand}" Padding="13,8" Margin="0,0,8,0"
+                        ToolTip="이전 시험지에 출제된 단어를 제외하고 다른 새로운 단어들로 시험지를 채웁니다.">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Data="{StaticResource IconRefresh}" Fill="{DynamicResource TextPrimaryBrush}" Width="13" Height="13" Stretch="Uniform" Margin="0,0,6,0"/>
+                        <TextBlock Text="다른 단어로 채우기 (다음 세트)" FontSize="12" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Button 3: Export PDF -->
+                <Button Style="{StaticResource PrimaryButton}" Command="{Binding ExportPdfCommand}" Padding="15,8">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Data="{StaticResource IconPdf}" Fill="White" Width="13" Height="13" Stretch="Uniform" Margin="0,0,6,0"/>
+                        <TextBlock Text="PDF 저장 및 인쇄" FontSize="12.5" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
         </Grid>
 
         <!-- Main Content -->
@@ -110,9 +131,38 @@
                                 <ComboBoxItem Content="JLPT N1 (고급)" Tag="{x:Static models:JlptLevel.N1}"/>
                             </ComboBox>
 
+                            <!-- Study Count Filter (누적 학습 횟수 필터) -->
+                            <TextBlock Text="누적 학습 횟수 필터" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4"/>
+                            <ComboBox SelectedValue="{Binding SelectedStudyFilter}" SelectedValuePath="Tag" Margin="0,0,0,8">
+                                <ComboBoxItem Content="전체 한자 (제한 없음)" Tag="{x:Static models:StudyCountFilterType.All}" IsSelected="True"/>
+                                <ComboBoxItem Content="미학습 한자만 (누적 0회)" Tag="{x:Static models:StudyCountFilterType.UnstudiedOnly}"/>
+                                <ComboBoxItem Content="누적 N회 미만 (덜 학습한 한자 집중)" Tag="{x:Static models:StudyCountFilterType.LessThan}"/>
+                                <ComboBoxItem Content="누적 N회 이상 (이미 학습한 한자 복습)" Tag="{x:Static models:StudyCountFilterType.AtLeast}"/>
+                            </ComboBox>
+
+                            <!-- Threshold Slider (Visible when LessThan or AtLeast is selected) -->
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="기준 누적 횟수 (N)" FontSize="10.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding StudyFilterThreshold, StringFormat='{}기준: {0}회'}" FontSize="10.5" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                            </Grid>
+                            <Slider Minimum="1" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True"
+                                    Value="{Binding StudyFilterThreshold}" Margin="0,0,0,10"/>
+
+                            <!-- Matching Count Badge -->
+                            <Border Background="{DynamicResource BgCardSecondaryBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="6" Padding="8,5" Margin="0,0,0,12">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="조건에 일치하는 한자: " FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    <TextBlock Text="{Binding MatchingCandidatesCount, StringFormat='{}{0}개'}" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                                </StackPanel>
+                            </Border>
+
                             <!-- Question Count -->
                             <Grid Margin="0,0,0,4">
-                                <TextBlock Text="문항 수" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                <TextBlock Text="출제 문항 수" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                 <TextBlock Text="{Binding QuestionCount, StringFormat='{}{0}문항'}" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Right"/>
                             </Grid>
                             <Slider Minimum="5" Maximum="100" TickFrequency="5" IsSnapToTickEnabled="True"
@@ -133,6 +183,34 @@
 
                             <CheckBox Content="단어별 대표 예문 및 파생 어휘 포함" IsChecked="{Binding IncludeExamples}" Margin="0,0,0,8"/>
                             <CheckBox Content="한자 획수 및 부수 정보 표기" IsChecked="{Binding IncludeStrokeCount}" Margin="0,0,0,8"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Multi-Set & Continuous Generation Card -->
+                    <Border Style="{StaticResource TailscaleCard}" Margin="0,0,0,14">
+                        <StackPanel>
+                            <TextBlock Text="4. 다회차 시험지 연속 출제 &amp; 누적 반영" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4"/>
+                            <TextBlock Text="여러 세트의 PDF를 뽑을 때 이미 출제된 단어를 제외하고 새 단어로 채우거나, 출제된 단어를 누적 학습에 반영합니다." FontSize="10.5" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,10"/>
+
+                            <Button Style="{StaticResource SuccessButton}" Command="{Binding MarkCurrentWorksheetAsStudiedCommand}" Margin="0,0,0,8" Padding="12,8" HorizontalContentAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="{StaticResource IconCheck}" Fill="White" Width="12" Height="12" Stretch="Uniform" Margin="0,0,6,0"/>
+                                    <TextBlock Text="현재 출제된 한자 누적에 산입 (+1)" FontSize="11.5" FontWeight="Bold"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button Style="{StaticResource SecondaryButton}" Command="{Binding GenerateNextSetCommand}" Margin="0,0,0,8" Padding="12,8" HorizontalContentAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="{StaticResource IconRefresh}" Fill="{DynamicResource TextPrimaryBrush}" Width="12" Height="12" Stretch="Uniform" Margin="0,0,6,0"/>
+                                    <TextBlock Text="다른 단어들로 새로 채우기 (다음 세트)" FontSize="11.5" FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Grid Margin="0,4,0,0">
+                                <TextBlock Text="{Binding ExcludedCount, StringFormat='이전 출제 제외 한자: {0}개'}" FontSize="10.5" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center"/>
+                                <Button Style="{StaticResource SecondaryButton}" Command="{Binding ResetExcludedHistoryCommand}" 
+                                        Content="제외 초기화" FontSize="10" Padding="6,2" HorizontalAlignment="Right"/>
+                            </Grid>
                         </StackPanel>
                     </Border>
 

@@ -15,7 +15,10 @@ public interface IPdfWorksheetService
         JlptLevel level, 
         int questionCount, 
         IReadOnlyList<KanjiItem> candidates,
-        string? title = null);
+        string? title = null,
+        IReadOnlyDictionary<string, StudyRecord>? studyRecords = null,
+        StudyCountFilterType studyFilterType = StudyCountFilterType.All,
+        int studyFilterThreshold = 3);
 }
 
 public class PdfWorksheetService : IPdfWorksheetService
@@ -75,11 +78,30 @@ public class PdfWorksheetService : IPdfWorksheetService
         JlptLevel level, 
         int questionCount, 
         IReadOnlyList<KanjiItem> candidates,
-        string? title = null)
+        string? title = null,
+        IReadOnlyDictionary<string, StudyRecord>? studyRecords = null,
+        StudyCountFilterType studyFilterType = StudyCountFilterType.All,
+        int studyFilterThreshold = 3)
     {
         var filtered = level == JlptLevel.All 
             ? candidates.ToList() 
             : candidates.Where(k => k.Level == level).ToList();
+
+        // Apply Study Count Filter if study records are available
+        if (studyRecords != null && studyFilterType != StudyCountFilterType.All)
+        {
+            filtered = filtered.Where(k =>
+            {
+                int count = studyRecords.TryGetValue(k.Id, out var rec) ? rec.EffectiveStudyCount : 0;
+                return studyFilterType switch
+                {
+                    StudyCountFilterType.UnstudiedOnly => count == 0,
+                    StudyCountFilterType.LessThan => count < studyFilterThreshold,
+                    StudyCountFilterType.AtLeast => count >= studyFilterThreshold,
+                    _ => true
+                };
+            }).ToList();
+        }
 
         // Shuffle
         var shuffled = filtered.OrderBy(_ => Random.Shared.Next()).Take(questionCount).ToList();
@@ -89,7 +111,9 @@ public class PdfWorksheetService : IPdfWorksheetService
             SheetType = type,
             JlptLevel = level,
             QuestionCount = shuffled.Count,
-            Title = !string.IsNullOrWhiteSpace(title) ? title : GetDefaultTitle(type, level)
+            Title = !string.IsNullOrWhiteSpace(title) ? title : GetDefaultTitle(type, level),
+            StudyFilterType = studyFilterType,
+            StudyFilterThreshold = studyFilterThreshold
         };
 
         int idx = 1;

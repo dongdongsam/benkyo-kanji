@@ -47,6 +47,10 @@ public class StudyRecord
     public StudyStatus Status { get; set; } = StudyStatus.New;
     public int Lapses { get; set; } = 0;
     public List<ReviewLogEntry> History { get; set; } = [];
+    public int CumulativeStudyCount { get; set; } = 0;
+
+    [JsonIgnore]
+    public int EffectiveStudyCount => CumulativeStudyCount;
 
     [JsonIgnore]
     public bool IsDue => NextReviewDate <= DateTime.UtcNow;

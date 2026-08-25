@@ -11,6 +11,14 @@ public enum WorksheetType
     MixedQuiz          // Randomly blanks out one or two fields per item
 }
 
+public enum StudyCountFilterType
+{
+    All = 0,             // 전체 한자 (제한 없음)
+    UnstudiedOnly = 1,   // 미학습 한자만 (누적 0회)
+    LessThan = 2,        // 누적 N회 미만 (< N, 아직 덜 외운 한자 집중 출제)
+    AtLeast = 3          // 누적 N회 이상 (>= N, 이미 학습한 한자 복습 테스트)
+}
+
 public class WorksheetItem
 {
     public int Index { get; set; }
@@ -35,6 +43,8 @@ public class WorksheetConfig
     public bool ShowHeaderInfo { get; set; } = true;
     public bool IncludeQrCode { get; set; } = true;
     public bool OnlyDueItems { get; set; } = false;
+    public StudyCountFilterType StudyFilterType { get; set; } = StudyCountFilterType.All;
+    public int StudyFilterThreshold { get; set; } = 3;
     public List<WorksheetItem> Items { get; set; } = [];
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
