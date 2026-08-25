@@ -78,6 +78,7 @@ public class MainViewModel : ViewModelBase
             ThemeManager.ApplyTheme(CurrentTheme);
 
             await DashboardVM.InitializeAsync();
+            await DictionaryVM.InitializeAsync();
         }
         finally
         {

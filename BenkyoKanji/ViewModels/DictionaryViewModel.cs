@@ -58,7 +58,18 @@ public class DictionaryViewModel : ViewModelBase
         get => _selectedKanji;
         set
         {
-            if (SetProperty(ref _selectedKanji, value) && value != null)
+            if (SetProperty(ref _selectedKanji, value))
+            {
+                if (value != null)
+                {
+                    SelectedStudyRecord = _srsService.GetOrCreateRecord(value.Id);
+                }
+                else
+                {
+                    SelectedStudyRecord = null;
+                }
+            }
+            else if (value != null && (SelectedStudyRecord == null || SelectedStudyRecord.KanjiId != value.Id))
             {
                 SelectedStudyRecord = _srsService.GetOrCreateRecord(value.Id);
             }
@@ -147,6 +158,7 @@ public class DictionaryViewModel : ViewModelBase
 
     public IRelayCommand SearchCommand { get; }
     public IRelayCommand<JlptLevel> SelectLevelFilterCommand { get; }
+    public IRelayCommand<KanjiItem> SelectKanjiCommand { get; }
     public IRelayCommand ToggleAddCustomCommand { get; }
     public IRelayCommand SaveCustomKanjiCommand { get; }
     public IRelayCommand<string> DeleteKanjiCommand { get; }
@@ -158,6 +170,13 @@ public class DictionaryViewModel : ViewModelBase
 
         SearchCommand = new RelayCommand(FilterItems);
         SelectLevelFilterCommand = new RelayCommand<JlptLevel>(level => SelectedLevel = level);
+        SelectKanjiCommand = new RelayCommand<KanjiItem>(item =>
+        {
+            if (item != null)
+            {
+                SelectedKanji = item;
+            }
+        });
         ToggleAddCustomCommand = new RelayCommand(() => IsAddingCustom = !IsAddingCustom);
         SaveCustomKanjiCommand = new AsyncRelayCommand(SaveCustomKanjiAsync);
         DeleteKanjiCommand = new AsyncRelayCommand<string>(DeleteKanjiAsync);
@@ -170,25 +189,48 @@ public class DictionaryViewModel : ViewModelBase
         FilterItems();
     }
 
-    private void FilterItems()
+    public void SelectItem(KanjiItem? item)
     {
-        var prevId = SelectedKanji?.Id;
-        var results = _kanjiRepo.Search(SearchQuery, SelectedLevel);
-        FilteredItems.Clear();
-        foreach (var item in results)
+        if (item != null)
         {
-            FilteredItems.Add(item);
+            SelectedKanji = item;
         }
+    }
 
-        if (FilteredItems.Count > 0)
+    private void RunOnUi(Action action)
+    {
+        if (System.Windows.Application.Current?.Dispatcher != null && !System.Windows.Application.Current.Dispatcher.CheckAccess())
         {
-            var match = FilteredItems.FirstOrDefault(k => k.Id == prevId);
-            SelectedKanji = match ?? FilteredItems[0];
+            System.Windows.Application.Current.Dispatcher.Invoke(action);
         }
         else
         {
-            SelectedKanji = null;
+            action();
         }
+    }
+
+    private void FilterItems()
+    {
+        RunOnUi(() =>
+        {
+            var prevId = SelectedKanji?.Id;
+            var results = _kanjiRepo.Search(SearchQuery, SelectedLevel);
+            FilteredItems.Clear();
+            foreach (var item in results)
+            {
+                FilteredItems.Add(item);
+            }
+
+            if (FilteredItems.Count > 0)
+            {
+                var match = FilteredItems.FirstOrDefault(k => k.Id == prevId);
+                SelectedKanji = match ?? FilteredItems[0];
+            }
+            else
+            {
+                SelectedKanji = null;
+            }
+        });
     }
 
     private async Task SaveCustomKanjiAsync()

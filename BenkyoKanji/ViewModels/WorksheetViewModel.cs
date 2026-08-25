@@ -129,16 +129,31 @@ public class WorksheetViewModel : ViewModelBase
         QuickPresetMeaningQuizCommand = new RelayCommand(() => SelectedType = WorksheetType.MeaningQuiz);
     }
 
+    private void RunOnUi(Action action)
+    {
+        if (System.Windows.Application.Current?.Dispatcher != null && !System.Windows.Application.Current.Dispatcher.CheckAccess())
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(action);
+        }
+        else
+        {
+            action();
+        }
+    }
+
     public override async Task InitializeAsync()
     {
         await _kanjiRepo.InitializeAsync();
         await _srsService.InitializeAsync();
         var history = await _storageService.LoadWorksheetHistoryAsync();
-        WorksheetHistory.Clear();
-        foreach (var ws in history.Take(10))
+        RunOnUi(() =>
         {
-            WorksheetHistory.Add(ws);
-        }
+            WorksheetHistory.Clear();
+            foreach (var ws in history.Take(10))
+            {
+                WorksheetHistory.Add(ws);
+            }
+        });
 
         GeneratePreview();
     }
@@ -166,11 +181,14 @@ public class WorksheetViewModel : ViewModelBase
         CurrentConfig.IncludeExamples = IncludeExamples;
         CurrentConfig.IncludeStrokeCount = IncludeStrokeCount;
 
-        PreviewItems.Clear();
-        foreach (var item in CurrentConfig.Items)
+        RunOnUi(() =>
         {
-            PreviewItems.Add(item);
-        }
+            PreviewItems.Clear();
+            foreach (var item in CurrentConfig.Items)
+            {
+                PreviewItems.Add(item);
+            }
+        });
     }
 
     public async Task ExportPdfAsync()

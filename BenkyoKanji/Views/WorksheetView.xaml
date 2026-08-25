@@ -115,7 +115,7 @@
                                 <TextBlock Text="문항 수" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
                                 <TextBlock Text="{Binding QuestionCount, StringFormat='{}{0}문항'}" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Right"/>
                             </Grid>
-                            <Slider Minimum="5" Maximum="50" TickFrequency="5" IsSnapToTickEnabled="True"
+                            <Slider Minimum="5" Maximum="100" TickFrequency="5" IsSnapToTickEnabled="True"
                                     Value="{Binding QuestionCount}" Margin="0,0,0,12"/>
 
                             <!-- Only Due Items Toggle -->

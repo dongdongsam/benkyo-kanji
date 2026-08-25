@@ -195,6 +195,48 @@ public class PdfWorksheetTests
     }
 
     [Fact]
+    public void GenerateWorksheetPdf_ContainsKanjiText()
+    {
+        var sampleItems = new List<KanjiItem>
+        {
+            new() { Kanji = "日", Onyomi = "ニチ", Kunyomi = "ひ", MeaningKo = "날 일", Level = JlptLevel.N5 },
+            new() { Kanji = "学", Onyomi = "ガク", Kunyomi = "まな・ぶ", MeaningKo = "배울 학", Level = JlptLevel.N5 }
+        };
+
+        var config = _pdfService.CreateWorksheetConfig(WorksheetType.FullStudyTable, JlptLevel.N5, 2, sampleItems, "JLPT N5 한자 테스트");
+        var pdfBytes = _pdfService.GenerateWorksheetPdf(config);
+
+        Assert.NotNull(pdfBytes);
+        Assert.True(pdfBytes.Length > 2000);
+    }
+
+    [Fact]
+    public void GenerateWorksheetPdf_With100Items_Succeeds()
+    {
+        var sampleItems = new List<KanjiItem>();
+        for (int i = 1; i <= 100; i++)
+        {
+            sampleItems.Add(new KanjiItem
+            {
+                Id = $"test-{i:D3}",
+                Kanji = $"字{i}",
+                Onyomi = "ジ",
+                Kunyomi = "あざ",
+                MeaningKo = $"글자 {i}",
+                Level = JlptLevel.N3,
+                StrokeCount = 6
+            });
+        }
+
+        var config = _pdfService.CreateWorksheetConfig(WorksheetType.FullStudyTable, JlptLevel.N3, 100, sampleItems, "100문항 종합 한자 학습지");
+        Assert.Equal(100, config.Items.Count);
+
+        var pdfBytes = _pdfService.GenerateWorksheetPdf(config);
+        Assert.NotNull(pdfBytes);
+        Assert.True(pdfBytes.Length > 10000);
+    }
+
+    [Fact]
     public void GenerateSampleWorksheetFiles_WritesToSampleFolder()
     {
         var sampleDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "samples");
@@ -493,5 +535,15 @@ public class DictionaryViewModelTests
         Assert.NotEmpty(_vm.FilteredItems);
         Assert.NotNull(_vm.SelectedKanji);
         Assert.Contains("日", _vm.SelectedKanji.Kanji);
+
+        // Test SelectKanjiCommand
+        if (_vm.FilteredItems.Count > 0)
+        {
+            var target = _vm.FilteredItems[0];
+            _vm.SelectKanjiCommand.Execute(target);
+            Assert.Equal(target.Id, _vm.SelectedKanji.Id);
+            Assert.NotNull(_vm.SelectedStudyRecord);
+            Assert.Equal(target.Id, _vm.SelectedStudyRecord.KanjiId);
+        }
     }
 }

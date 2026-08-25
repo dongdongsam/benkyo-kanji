@@ -83,15 +83,30 @@ public class GradingViewModel : ViewModelBase
         ToggleItemStatusCommand = new RelayCommand<GradingItemResult>(ToggleItemStatus);
     }
 
+    private void RunOnUi(Action action)
+    {
+        if (System.Windows.Application.Current?.Dispatcher != null && !System.Windows.Application.Current.Dispatcher.CheckAccess())
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(action);
+        }
+        else
+        {
+            action();
+        }
+    }
+
     public override async Task InitializeAsync()
     {
         await _srsService.InitializeAsync();
         var history = await _storageService.LoadGradingHistoryAsync();
-        GradingHistory.Clear();
-        foreach (var item in history.Take(10))
+        RunOnUi(() =>
         {
-            GradingHistory.Add(item);
-        }
+            GradingHistory.Clear();
+            foreach (var item in history.Take(10))
+            {
+                GradingHistory.Add(item);
+            }
+        });
     }
 
     public void SetImageFromPath(string path)
@@ -173,23 +188,27 @@ public class GradingViewModel : ViewModelBase
             var result = await _gradingService.GradeWorksheetPhotoAsync(SelectedImagePath);
             CurrentResult = result;
 
-            GradingItems.Clear();
-            foreach (var item in result.Items)
+            var history = await _storageService.LoadGradingHistoryAsync();
+
+            RunOnUi(() =>
             {
-                GradingItems.Add(item);
-            }
+                GradingItems.Clear();
+                foreach (var item in result.Items)
+                {
+                    GradingItems.Add(item);
+                }
+
+                GradingHistory.Clear();
+                foreach (var h in history.Take(10))
+                {
+                    GradingHistory.Add(h);
+                }
+            });
 
             HasGraded = true;
             IsSynced = false;
             SyncButtonText = "학습 기록에 자동 반영하기 (SRS 동기화)";
             StatusMessage = $"채점 완료! 총 {result.TotalQuestions}문항 중 {result.CorrectCount}문항 정답 ({result.ScorePercentage:F1}%)";
-
-            var history = await _storageService.LoadGradingHistoryAsync();
-            GradingHistory.Clear();
-            foreach (var h in history.Take(10))
-            {
-                GradingHistory.Add(h);
-            }
         }
         catch (Exception ex)
         {

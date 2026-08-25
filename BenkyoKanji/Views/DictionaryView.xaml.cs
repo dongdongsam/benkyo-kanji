@@ -12,21 +12,4 @@ public partial class DictionaryView : UserControl
     {
         InitializeComponent();
     }
-
-    private void KanjiListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (KanjiListBox.SelectedItem is KanjiItem item && DataContext is DictionaryViewModel vm)
-        {
-            vm.SelectedKanji = item;
-        }
-    }
-
-    private void KanjiItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        if (sender is FrameworkElement fe && fe.DataContext is KanjiItem item && DataContext is DictionaryViewModel vm)
-        {
-            vm.SelectedKanji = item;
-            KanjiListBox.SelectedItem = item;
-        }
-    }
 }

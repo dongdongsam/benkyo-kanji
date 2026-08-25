@@ -111,6 +111,18 @@ public class DashboardViewModel : ViewModelBase
         await RefreshStatsAsync();
     }
 
+    private void RunOnUi(Action action)
+    {
+        if (System.Windows.Application.Current?.Dispatcher != null && !System.Windows.Application.Current.Dispatcher.CheckAccess())
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(action);
+        }
+        else
+        {
+            action();
+        }
+    }
+
     public async Task RefreshStatsAsync()
     {
         IsBusy = true;
@@ -134,29 +146,32 @@ public class DashboardViewModel : ViewModelBase
             StreakDays = _srsService.GetCurrentStreak();
             RetentionRate = _srsService.GetRetentionRate();
 
-            // Preview due cards
-            QuickReviewPreview.Clear();
-            foreach (var item in dueItems.Take(5))
-            {
-                QuickReviewPreview.Add(item);
-            }
-
-            // 7-day forecast
             var forecast = _srsService.GetUpcomingReviewForecast(7);
-            ForecastDays.Clear();
             var today = DateTime.UtcNow.Date;
 
-            foreach (var kvp in forecast)
+            RunOnUi(() =>
             {
-                var isToday = kvp.Key == today;
-                ForecastDays.Add(new ForecastDayItem
+                // Preview due cards
+                QuickReviewPreview.Clear();
+                foreach (var item in dueItems.Take(5))
                 {
-                    DayName = isToday ? "오늘" : kvp.Key.ToString("ddd", System.Globalization.CultureInfo.GetCultureInfo("ko-KR")),
-                    DateStr = kvp.Key.ToString("MM/dd"),
-                    DueCount = kvp.Value,
-                    IsToday = isToday
-                });
-            }
+                    QuickReviewPreview.Add(item);
+                }
+
+                // 7-day forecast
+                ForecastDays.Clear();
+                foreach (var kvp in forecast)
+                {
+                    var isToday = kvp.Key == today;
+                    ForecastDays.Add(new ForecastDayItem
+                    {
+                        DayName = isToday ? "오늘" : kvp.Key.ToString("ddd", System.Globalization.CultureInfo.GetCultureInfo("ko-KR")),
+                        DateStr = kvp.Key.ToString("MM/dd"),
+                        DueCount = kvp.Value,
+                        IsToday = isToday
+                    });
+                }
+            });
         }
         finally
         {

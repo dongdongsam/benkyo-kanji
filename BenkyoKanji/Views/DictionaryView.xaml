@@ -22,6 +22,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -33,8 +34,8 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="일본어 한자·어휘 사전 및 라이브러리" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                <TextBlock Text="JLPT N5~N1 급수별 한자 검색, 정통 한국어 훈음(음·훈) 및 상세 어휘 학습" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+                <TextBlock Text="일본어 한자·어휘 사전" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBlock Text="JLPT N5~N1 급수별 전체 한자 및 한국어 훈음, 음독/훈독 어휘 라이브러리" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,2,0,0"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
@@ -104,227 +105,169 @@
             </StackPanel>
         </Border>
 
-        <!-- Main Content Area -->
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="380"/>
-                <ColumnDefinition Width="16"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <!-- Left: Search & Filter List -->
-            <Grid Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+        <!-- Search & Filter Bar -->
+        <Border Grid.Row="2" Style="{StaticResource TailscaleCard}" Margin="0,0,0,16" Padding="14,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="280"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
                 <!-- Search Input -->
-                <Grid Grid.Row="0" Margin="0,0,0,10">
-                    <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" Padding="32,8,8,8"/>
-                    <Path Data="{StaticResource IconSearch}" Fill="{DynamicResource TextMutedBrush}" Width="14" Height="14" Stretch="Uniform" HorizontalAlignment="Left" Margin="10,0,0,0" IsHitTestVisible="False"/>
+                <Grid Grid.Column="0">
+                    <TextBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" Padding="32,7,8,7"/>
+                    <Path Data="{StaticResource IconSearch}" Fill="{DynamicResource TextMutedBrush}" Width="13" Height="13" Stretch="Uniform" HorizontalAlignment="Left" Margin="10,0,0,0" IsHitTestVisible="False"/>
                 </Grid>
 
                 <!-- JLPT Filter Pills -->
-                <WrapPanel Grid.Row="1" Margin="0,0,0,12">
-                    <RadioButton Style="{StaticResource NavButton}" Content="전체" Padding="8,4" Margin="0,0,4,4"
+                <WrapPanel Grid.Column="2" VerticalAlignment="Center">
+                    <RadioButton Style="{StaticResource NavButton}" Content="전체" Padding="10,5" Margin="0,0,6,0"
                                  Command="{Binding SelectLevelFilterCommand}" CommandParameter="{x:Static models:JlptLevel.All}"
                                  IsChecked="{Binding SelectedLevel, Converter={StaticResource EqualityConv}, ConverterParameter={x:Static models:JlptLevel.All}}"/>
-                    <RadioButton Style="{StaticResource NavButton}" Content="N5" Padding="8,4" Margin="0,0,4,4"
+                    <RadioButton Style="{StaticResource NavButton}" Content="N5" Padding="10,5" Margin="0,0,6,0"
                                  Command="{Binding SelectLevelFilterCommand}" CommandParameter="{x:Static models:JlptLevel.N5}"
                                  IsChecked="{Binding SelectedLevel, Converter={StaticResource EqualityConv}, ConverterParameter={x:Static models:JlptLevel.N5}}"/>
-                    <RadioButton Style="{StaticResource NavButton}" Content="N4" Padding="8,4" Margin="0,0,4,4"
+                    <RadioButton Style="{StaticResource NavButton}" Content="N4" Padding="10,5" Margin="0,0,6,0"
                                  Command="{Binding SelectLevelFilterCommand}" CommandParameter="{x:Static models:JlptLevel.N4}"
                                  IsChecked="{Binding SelectedLevel, Converter={StaticResource EqualityConv}, ConverterParameter={x:Static models:JlptLevel.N4}}"/>
-                    <RadioButton Style="{StaticResource NavButton}" Content="N3" Padding="8,4" Margin="0,0,4,4"
+                    <RadioButton Style="{StaticResource NavButton}" Content="N3" Padding="10,5" Margin="0,0,6,0"
                                  Command="{Binding SelectLevelFilterCommand}" CommandParameter="{x:Static models:JlptLevel.N3}"
                                  IsChecked="{Binding SelectedLevel, Converter={StaticResource EqualityConv}, ConverterParameter={x:Static models:JlptLevel.N3}}"/>
-                    <RadioButton Style="{StaticResource NavButton}" Content="N2" Padding="8,4" Margin="0,0,4,4"
+                    <RadioButton Style="{StaticResource NavButton}" Content="N2" Padding="10,5" Margin="0,0,6,0"
                                  Command="{Binding SelectLevelFilterCommand}" CommandParameter="{x:Static models:JlptLevel.N2}"
                                  IsChecked="{Binding SelectedLevel, Converter={StaticResource EqualityConv}, ConverterParameter={x:Static models:JlptLevel.N2}}"/>
-                    <RadioButton Style="{StaticResource NavButton}" Content="N1" Padding="8,4" Margin="0,0,4,4"
+                    <RadioButton Style="{StaticResource NavButton}" Content="N1" Padding="10,5" Margin="0,0,6,0"
                                  Command="{Binding SelectLevelFilterCommand}" CommandParameter="{x:Static models:JlptLevel.N1}"
                                  IsChecked="{Binding SelectedLevel, Converter={StaticResource EqualityConv}, ConverterParameter={x:Static models:JlptLevel.N1}}"/>
                 </WrapPanel>
 
-                <!-- Results List -->
-                <Border Grid.Row="2" Style="{StaticResource TailscaleCard}" Padding="4">
-                    <ListBox x:Name="KanjiListBox"
-                             ItemsSource="{Binding FilteredItems}"
-                             SelectedItem="{Binding SelectedKanji, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             SelectionChanged="KanjiListBox_SelectionChanged"
-                             Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="Padding" Value="0"/>
-                                <Setter Property="Margin" Value="0,2"/>
-                                <Setter Property="Cursor" Value="Hand"/>
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Setter Property="BorderThickness" Value="0"/>
-                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="KanjiItem_PreviewMouseLeftButtonDown"/>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="ListBoxItem">
-                                            <Border x:Name="ItemBorder" Background="{DynamicResource BgCardSecondaryBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8" Padding="10,8">
-                                                <ContentPresenter />
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource BgCardHoverBrush}" />
-                                                    <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{DynamicResource BorderLightBrush}" />
-                                                </Trigger>
-                                                <Trigger Property="IsSelected" Value="True">
-                                                    <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource NavActiveBgBrush}" />
-                                                    <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
-                                                    <Setter TargetName="ItemBorder" Property="BorderThickness" Value="1.5" />
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="42"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Text="{Binding Kanji}" FontFamily="{StaticResource KanjiFont}" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
-
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0">
-                                        <TextBlock Text="{Binding MeaningKo}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                        <TextBlock Text="{Binding AllReadings}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}"/>
-                                    </StackPanel>
-
-                                    <Border Grid.Column="2" Background="{Binding Level, Converter={StaticResource LevelColorConv}}" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding LevelDisplay}" FontSize="9" Foreground="White" FontWeight="Bold"/>
-                                    </Border>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                <!-- Count Badge -->
+                <Border Grid.Column="3" Background="{DynamicResource NavActiveBgBrush}" BorderBrush="{DynamicResource AccentBrush}" BorderThickness="1" CornerRadius="6" Padding="10,4" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding FilteredItems.Count, StringFormat='총 {0}개 한자'}" FontSize="11.5" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
                 </Border>
             </Grid>
+        </Border>
 
-            <!-- Right: Selected Kanji Inspector -->
-            <Border Grid.Column="2" Style="{StaticResource TailscaleCard}">
-                <Grid>
-                    <!-- Placeholder when nothing selected -->
-                    <TextBlock Text="목록에서 한자를 선택하면 상세 정보가 표시됩니다." FontSize="13" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"
-                               Visibility="{Binding SelectedKanji, Converter={StaticResource InvertNullToVisConv}}"/>
+        <!-- Full-Width Results List -->
+        <Border Grid.Row="3" Style="{StaticResource TailscaleCard}" Padding="8">
+            <ListBox x:Name="KanjiListBox"
+                     ItemsSource="{Binding FilteredItems}"
+                     Background="Transparent" BorderThickness="0"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Margin" Value="0,4"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border x:Name="ItemBorder" Background="{DynamicResource BgCardSecondaryBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8" Padding="14,12">
+                                        <ContentPresenter />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource BgCardHoverBrush}" />
+                                            <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{DynamicResource BorderLightBrush}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="72"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
 
-                    <!-- Detailed Inspector -->
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
-                                  Visibility="{Binding SelectedKanji, Converter={StaticResource NullToVisConv}}">
-                        <StackPanel Margin="8">
-                            <!-- Hero Section -->
-                            <Grid Margin="0,0,0,20">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Border Background="{DynamicResource KanjiBoxBgBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="12" Width="100" Height="100" Margin="0,0,20,0">
-                                    <TextBlock Text="{Binding SelectedKanji.Kanji}" FontFamily="{StaticResource KanjiFont}"
-                                               FontSize="58" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-
-                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                                        <Border Background="{Binding SelectedKanji.Level, Converter={StaticResource LevelColorConv}}" CornerRadius="4" Padding="8,2" Margin="0,0,8,0">
-                                            <TextBlock Text="{Binding SelectedKanji.LevelDisplay}" FontSize="10" Foreground="White" FontWeight="Bold"/>
-                                        </Border>
-                                        <Border Style="{StaticResource TailscalePill}">
-                                            <TextBlock Text="{Binding SelectedKanji.StrokeCount, StringFormat='획수: {0}획'}" FontSize="10.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
-                                        </Border>
-                                    </StackPanel>
-
-                                    <!-- Large Korean Meaning (Hun-Eum) -->
-                                    <TextBlock Text="{Binding SelectedKanji.MeaningKo}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                    <TextBlock Text="{Binding SelectedKanji.MeaningEn, StringFormat='영문 뜻: {0}'}" FontSize="12.5" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,3,0,0"
-                                               Visibility="{Binding SelectedKanji.MeaningEn, Converter={StaticResource NullToVisConv}}"/>
-                                </StackPanel>
-                            </Grid>
-
-                            <!-- Readings Card -->
-                            <Border Style="{StaticResource TailscaleSecondaryCard}" Margin="0,0,0,16">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                                        <TextBlock Text="음독 (音読み - 카타카나/히라가나)" FontSize="11" Foreground="{DynamicResource AccentBrush}" FontWeight="Bold" Margin="0,0,0,4"/>
-                                        <TextBlock Text="{Binding SelectedKanji.Onyomi}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                    </StackPanel>
-
-                                    <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                                        <TextBlock Text="훈독 (訓読み - 히라가나)" FontSize="11" Foreground="{DynamicResource SuccessBrush}" FontWeight="Bold" Margin="0,0,0,4"/>
-                                        <TextBlock Text="{Binding SelectedKanji.Kunyomi}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                                    </StackPanel>
-                                </Grid>
+                            <!-- Left: Large Kanji Box -->
+                            <Border Grid.Column="0" Background="{DynamicResource KanjiBoxBgBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Width="60" Height="60" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Kanji}" FontFamily="{StaticResource KanjiFont}" FontSize="34" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
 
-                            <!-- SRS Current Learning Status Card -->
-                            <Border Style="{StaticResource TailscaleSecondaryCard}" Margin="0,0,0,16">
-                                <StackPanel>
-                                    <TextBlock Text="에빙하우스 망각 곡선 학습 현황" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8"/>
-                                    <UniformGrid Columns="3">
-                                        <StackPanel>
-                                            <TextBlock Text="암기 단계" FontSize="10.5" Foreground="{DynamicResource TextMutedBrush}"/>
-                                            <Border Background="{Binding SelectedStudyRecord.Status, Converter={StaticResource StudyStatusColorConv}}" CornerRadius="4" Padding="6,2" HorizontalAlignment="Left" Margin="0,3,0,0">
-                                                <TextBlock Text="{Binding SelectedStudyRecord.Status}" FontSize="10" Foreground="White" FontWeight="Bold"/>
+                            <!-- Middle: All Kanji Info -->
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="12,0,16,0">
+                                <!-- Top Row: Meaning and Badges -->
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,6">
+                                    <TextBlock Text="{Binding MeaningKo}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,10,0"/>
+                                    <Border Background="{Binding Level, Converter={StaticResource LevelColorConv}}" CornerRadius="4" Padding="7,2" Margin="0,0,8,0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding LevelDisplay}" FontSize="10" Foreground="White" FontWeight="Bold"/>
+                                    </Border>
+                                    <Border Style="{StaticResource TailscalePill}" Margin="0,0,8,0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding StrokeCount, StringFormat='획수: {0}획'}" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    </Border>
+                                    <Border Style="{StaticResource TailscalePill}" VerticalAlignment="Center"
+                                            Visibility="{Binding Radical, Converter={StaticResource NullToVisConv}}">
+                                        <TextBlock Text="{Binding Radical, StringFormat='부수: {0}'}" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                    </Border>
+                                    <TextBlock Text="{Binding MeaningEn, StringFormat='({0})'}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center" Margin="8,0,0,0"
+                                               Visibility="{Binding MeaningEn, Converter={StaticResource NullToVisConv}}"/>
+                                </StackPanel>
+
+                                <!-- Readings Row -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                    <!-- Onyomi -->
+                                    <Border Background="{DynamicResource NavActiveBgBrush}" BorderBrush="{DynamicResource AccentBrush}" BorderThickness="1" CornerRadius="4" Padding="6,2" Margin="0,0,10,0"
+                                            Visibility="{Binding Onyomi, Converter={StaticResource NullToVisConv}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="음독 " FontSize="10.5" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                                            <TextBlock Text="{Binding Onyomi}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Kunyomi -->
+                                    <Border Background="{DynamicResource NavActiveBgBrush}" BorderBrush="{DynamicResource SuccessBrush}" BorderThickness="1" CornerRadius="4" Padding="6,2" Margin="0,0,10,0"
+                                            Visibility="{Binding Kunyomi, Converter={StaticResource NullToVisConv}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="훈독 " FontSize="10.5" FontWeight="Bold" Foreground="{DynamicResource SuccessBrush}"/>
+                                            <TextBlock Text="{Binding Kunyomi}" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+
+                                <!-- Examples preview if any -->
+                                <ItemsControl ItemsSource="{Binding Examples}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal" Margin="0,2,0,0"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{DynamicResource BgCardHoverBrush}" CornerRadius="4" Padding="6,2" Margin="0,2,8,2">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Word}" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                                    <TextBlock Text="{Binding Reading, StringFormat=' [{0}]'}" FontSize="10.5" Foreground="{DynamicResource AccentBrush}"/>
+                                                    <TextBlock Text="{Binding Meaning, StringFormat=': {0}'}" FontSize="10.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                                </StackPanel>
                                             </Border>
-                                        </StackPanel>
-                                        <StackPanel>
-                                            <TextBlock Text="복습 간격" FontSize="10.5" Foreground="{DynamicResource TextMutedBrush}"/>
-                                            <TextBlock Text="{Binding SelectedStudyRecord.IntervalDays, StringFormat='{}{0:F1}일'}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,3,0,0"/>
-                                        </StackPanel>
-                                        <StackPanel>
-                                            <TextBlock Text="다음 복습일" FontSize="10.5" Foreground="{DynamicResource TextMutedBrush}"/>
-                                            <TextBlock Text="{Binding SelectedStudyRecord.NextReviewDate, StringFormat='{}{0:MM/dd HH:mm}'}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,3,0,0"/>
-                                        </StackPanel>
-                                    </UniformGrid>
-                                </StackPanel>
-                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
 
-                            <!-- Example Compounds -->
-                            <TextBlock Text="대표 활용 어휘 및 단어 예문" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8"/>
-                            <ItemsControl ItemsSource="{Binding SelectedKanji.Examples}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Margin="0,0,0,6" Padding="10" Background="{DynamicResource BgCardSecondaryBrush}" CornerRadius="6">
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Text="{Binding Word}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,10,0"/>
-                                                <TextBlock Grid.Column="1" Text="{Binding Reading, StringFormat='[{0}]'}" FontSize="13" Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                                <TextBlock Grid.Column="2" Text="{Binding Meaning}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
-                                            </Grid>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-
-                            <!-- Delete Custom Button (If custom) -->
-                            <Button Style="{StaticResource DangerButton}" Margin="0,16,0,0" HorizontalAlignment="Right"
-                                    Command="{Binding DeleteKanjiCommand}" CommandParameter="{Binding SelectedKanji.Id}"
-                                    Visibility="{Binding SelectedKanji.IsCustom, Converter={StaticResource BoolVisConv}}"
-                                    Content="이 사용자 단어 삭제"/>
-                        </StackPanel>
-                    </ScrollViewer>
-                </Grid>
-            </Border>
-        </Grid>
+                            <!-- Right: Delete button (if custom item) -->
+                            <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                <Button Style="{StaticResource DangerButton}" Padding="8,4" FontSize="11"
+                                        Command="{Binding DataContext.DeleteKanjiCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding Id}"
+                                        Visibility="{Binding IsCustom, Converter={StaticResource BoolVisConv}}"
+                                        Content="삭제"/>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
     </Grid>
 </UserControl>

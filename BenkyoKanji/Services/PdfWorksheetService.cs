@@ -20,11 +20,54 @@ public interface IPdfWorksheetService
 
 public class PdfWorksheetService : IPdfWorksheetService
 {
-    private static readonly string[] PreferredFonts = ["Yu Gothic", "Meiryo", "Malgun Gothic", "Segoe UI", "Arial"];
+    private static readonly string PrimaryFont = "Malgun Gothic";
+    private static readonly string[] CjkFallbackFonts = ["Yu Gothic", "Meiryo", "MS Gothic", "Yu Gothic UI", "Gulim", "Batang", "SimSun", "Arial Unicode MS", "Segoe UI"];
+    private static bool _fontsRegistered;
+
+    static PdfWorksheetService()
+    {
+        RegisterSystemFonts();
+    }
+
+    private static void RegisterSystemFonts()
+    {
+        if (_fontsRegistered) return;
+        _fontsRegistered = true;
+
+        try
+        {
+            var windowsFonts = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "Fonts");
+            if (Directory.Exists(windowsFonts))
+            {
+                string[] fontFiles = ["malgun.ttf", "malgunbd.ttf", "msgothic.ttc", "meiryo.ttc", "meiryob.ttc", "YuGothR.ttc", "YuGothB.ttc", "gulim.ttc", "batang.ttc"];
+                foreach (var fontFile in fontFiles)
+                {
+                    var fullPath = Path.Combine(windowsFonts, fontFile);
+                    if (File.Exists(fullPath))
+                    {
+                        try
+                        {
+                            using var stream = File.OpenRead(fullPath);
+                            QuestPDF.Drawing.FontManager.RegisterFont(stream);
+                        }
+                        catch
+                        {
+                            // Ignore individual font registration issues
+                        }
+                    }
+                }
+            }
+        }
+        catch
+        {
+            // Ignore system font directory access issues
+        }
+    }
 
     public PdfWorksheetService()
     {
         QuestPDF.Settings.License = LicenseType.Community;
+        RegisterSystemFonts();
     }
 
     public WorksheetConfig CreateWorksheetConfig(
@@ -144,7 +187,7 @@ public class PdfWorksheetService : IPdfWorksheetService
                 page.Size(PageSizes.A4);
                 page.Margin(22);
                 page.PageColor(Colors.White);
-                page.DefaultTextStyle(x => x.FontSize(9).FontFamily(PreferredFonts[0]).FontColor("#1f2937"));
+                page.DefaultTextStyle(x => x.FontSize(9).FontFamily(PrimaryFont).FontColor("#1f2937"));
 
                 page.Header().Element(header => ComposeHeader(header, config));
                 page.Content().Element(content => ComposeContent(content, config));
@@ -264,7 +307,11 @@ public class PdfWorksheetService : IPdfWorksheetService
                 {
                     kanjiCell.Column(c =>
                     {
-                        c.Item().AlignCenter().Text(kanji.Kanji).FontSize(20).Bold().FontColor("#111827");
+                        c.Item().AlignCenter().Text(t =>
+                        {
+                            var span = t.Span(kanji.Kanji).FontSize(22).Bold().FontColor("#111827");
+                            span.FontFamily(PrimaryFont);
+                        });
                         if (config.IncludeStrokeCount)
                         {
                             c.Item().AlignCenter().Text($"{kanji.StrokeCount}획 | {kanji.Level}").FontSize(7).FontColor("#9ca3af");
